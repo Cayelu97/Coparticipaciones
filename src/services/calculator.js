@@ -8,9 +8,24 @@
 // Helper to clean and parse numbers
 const parseNum = (val) => {
   if (val === null || val === undefined) return 0;
+  if (typeof val === 'number') return val;
+  if (typeof val === 'string') {
+    let clean = val.trim();
+    if (clean === '') return 0;
+    // Handle Spanish formatting: 1.250,50 -> 1250.50
+    if (clean.includes(',') && clean.includes('.')) {
+      clean = clean.replace(/\./g, '').replace(',', '.');
+    } else if (clean.includes(',')) {
+      // Handle comma decimal separator: 1250,50 -> 1250.50
+      clean = clean.replace(',', '.');
+    }
+    const num = parseFloat(clean);
+    return isNaN(num) ? 0 : num;
+  }
   const num = parseFloat(val);
   return isNaN(num) ? 0 : num;
 };
+
 
 /**
  * Determina si una obra social corresponde a Red Prestacional / ART
@@ -361,7 +376,18 @@ export const calculateCoparticipation = (rawRows, providers, settings) => {
   });
 
   // --- PASO 1: AGREGACIÓN DE DATOS RAW ---
-  rawRows.forEach(row => {
+  // Normalizar las claves a minúsculas y limpiar espacios para evitar fallos de formato
+  const cleanRows = rawRows.map(row => {
+    if (!row || typeof row !== 'object') return {};
+    const cleanRow = {};
+    for (const key of Object.keys(row)) {
+      const cleanKey = key.trim().toLowerCase();
+      cleanRow[cleanKey] = row[key];
+    }
+    return cleanRow;
+  });
+
+  cleanRows.forEach(row => {
     const mat = row.pre_matp;
     const osName = row.os_nombre ? String(row.os_nombre).trim() : '';
     const nomCod = row.nom_cod ? String(row.nom_cod).trim() : '';

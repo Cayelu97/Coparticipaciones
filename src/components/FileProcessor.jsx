@@ -72,25 +72,41 @@ const FileProcessor = ({ providers = [], settings = {}, onSaveSuccess, initialCa
         const data = new Uint8Array(e.target.result);
         const workbook = XLSX.read(data, { type: 'array' });
         
-        // Buscamos la pestaña que contenga "coparticipacion" o la primera hoja
-        const sheetName = workbook.SheetNames.find(n => 
-          n.toLowerCase().includes('coparticipacion') || n.toLowerCase().includes('atenciones')
-        ) || workbook.SheetNames[0];
+        // Buscar la mejor pestaña analizando cuáles contienen las columnas requeridas (case-insensitive)
+        let sheetName = workbook.SheetNames[0];
+        let maxMatchedFields = 0;
+        const requiredFields = ['pre_matp', 'me_cose', 'os_nombre', 'nom_cod'];
+
+        for (const name of workbook.SheetNames) {
+          const sheet = workbook.Sheets[name];
+          const tempRows = XLSX.utils.sheet_to_json(sheet, { range: 0 });
+          if (tempRows && tempRows.length > 0) {
+            // Obtener las llaves de la primera fila normalizadas a minúsculas y limpias
+            const firstRowKeys = Object.keys(tempRows[0]).map(k => k.trim().toLowerCase());
+            const matchedCount = requiredFields.filter(f => firstRowKeys.includes(f)).length;
+            if (matchedCount > maxMatchedFields) {
+              maxMatchedFields = matchedCount;
+              sheetName = name;
+            }
+          }
+        }
 
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
         if (jsonData.length === 0) {
-          throw new Error('La pestaña del archivo Excel está vacía.');
+          throw new Error(`La pestaña "${sheetName}" del archivo Excel está vacía.`);
         }
 
-        // Validar columnas clave
-        const firstRow = jsonData[0];
-        const requiredFields = ['pre_matp', 'me_cose', 'os_nombre', 'nom_cod'];
-        const missingFields = requiredFields.filter(f => !(f in firstRow));
+        // Validar columnas clave de forma estricta para dar un error descriptivo
+        const firstRowKeys = Object.keys(jsonData[0]).map(k => k.trim().toLowerCase());
+        const missingFields = requiredFields.filter(f => !firstRowKeys.includes(f));
 
-        if (missingFields.length > 0 && !('me_cose' in firstRow)) {
-          console.warn('Algunos campos esperados no se encontraron:', missingFields);
+        if (missingFields.length > 0) {
+          throw new Error(
+            `Estructura no válida en la pestaña "${sheetName}". Faltan las columnas: ${missingFields.join(', ')}. ` +
+            `Por favor, asegúrate de estar cargando el listado original de atenciones (exportado de facturación) y no la planilla resumen final.`
+          );
         }
 
         setRawRows(jsonData);
