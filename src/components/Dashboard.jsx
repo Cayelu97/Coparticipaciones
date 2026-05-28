@@ -57,9 +57,12 @@ const Dashboard = ({ history = [], providers = [], onNavigate }) => {
 
   const serviceData = getServiceBreakdown();
 
-  // History trend data
+  // History trend data sorted chronologically (oldest first / left to right)
   const trendData = [...history]
-    .reverse()
+    .sort((a, b) => {
+      if (a.year !== b.year) return a.year - b.year;
+      return a.month - b.month;
+    })
     .map(h => {
       const monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
       return {
