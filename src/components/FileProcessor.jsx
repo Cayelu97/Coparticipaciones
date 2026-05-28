@@ -83,7 +83,8 @@ const FileProcessor = ({
   onSaveSuccess, 
   initialCalculation,
   history = [],
-  onNavigate
+  onNavigate,
+  readOnly = false
 }) => {
   const [file, setFile] = useState(null);
   const [rawRows, setRawRows] = useState([]);
@@ -540,10 +541,11 @@ const FileProcessor = ({
                       {/* E: Tot Valorizado (Editable) */}
                       <td 
                         onDoubleClick={() => {
+                          if (readOnly) return;
                           setEditingCell({ rowIndex: originalIndex, field: 'col_e' });
                           setEditingValue(row.col_e || 0);
                         }}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: readOnly ? 'default' : 'pointer' }}
                       >
                         {editingCell?.rowIndex === originalIndex && editingCell?.field === 'col_e' ? (
                           <input 
@@ -568,11 +570,11 @@ const FileProcessor = ({
                       {/* G: APROSS Cant (Editable) */}
                       <td 
                         onDoubleClick={() => {
-                          if (row.formulas && row.formulas.col_j === null) return; // not active
+                          if (readOnly || (row.formulas && row.formulas.col_j === null)) return; // not active
                           setEditingCell({ rowIndex: originalIndex, field: 'col_g' });
                           setEditingValue(row.col_g || 0);
                         }}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: (readOnly || (row.formulas && row.formulas.col_j === null)) ? 'default' : 'pointer' }}
                       >
                         {editingCell?.rowIndex === originalIndex && editingCell?.field === 'col_g' ? (
                           <input 
@@ -597,11 +599,11 @@ const FileProcessor = ({
                       {/* K: Horizonte Cant (Editable) */}
                       <td 
                         onDoubleClick={() => {
-                          if (row.formulas && row.formulas.col_m === null) return; // not active
+                          if (readOnly || (row.formulas && row.formulas.col_m === null)) return; // not active
                           setEditingCell({ rowIndex: originalIndex, field: 'col_k' });
                           setEditingValue(row.col_k || 0);
                         }}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: (readOnly || (row.formulas && row.formulas.col_m === null)) ? 'default' : 'pointer' }}
                       >
                         {editingCell?.rowIndex === originalIndex && editingCell?.field === 'col_k' ? (
                           <input 
@@ -626,11 +628,11 @@ const FileProcessor = ({
                       {/* N: Red Cant (Editable) */}
                       <td 
                         onDoubleClick={() => {
-                          if (row.formulas && row.formulas.col_p === null) return; // not active
+                          if (readOnly || (row.formulas && row.formulas.col_p === null)) return; // not active
                           setEditingCell({ rowIndex: originalIndex, field: 'col_n' });
                           setEditingValue(row.col_n || 0);
                         }}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: (readOnly || (row.formulas && row.formulas.col_p === null)) ? 'default' : 'pointer' }}
                       >
                         {editingCell?.rowIndex === originalIndex && editingCell?.field === 'col_n' ? (
                           <input 

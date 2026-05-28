@@ -5,7 +5,8 @@ import FileProcessor from './components/FileProcessor';
 import ProvidersConfig from './components/ProvidersConfig';
 import HistoryList from './components/HistoryList';
 import SettingsConfig from './components/SettingsConfig';
-import { dbService } from './services/db';
+import Login from './components/Login';
+import { dbService, hasSupabase, supabase } from './services/db';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -13,11 +14,41 @@ function App() {
   const [settings, setSettings] = useState({});
   const [history, setHistory] = useState([]);
   
+  // Auth state
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(hasSupabase);
+
   // State for loading a preview from history
   const [preloadedHistoryItem, setPreloadedHistoryItem] = useState(null);
 
-  // Load initial data asynchronously
+  // Monitor Auth State
   useEffect(() => {
+    if (!hasSupabase) {
+      setAuthLoading(false);
+      return;
+    }
+
+    // Get current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setAuthLoading(false);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      setAuthLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  // Load initial data asynchronously once authenticated or if local
+  useEffect(() => {
+    if (authLoading || (hasSupabase && !user)) return;
+
     const loadInitialData = async () => {
       try {
         const loadedProviders = await dbService.getProviders();
@@ -32,7 +63,17 @@ function App() {
       }
     };
     loadInitialData();
-  }, []);
+  }, [authLoading, user]);
+
+  const role = !hasSupabase ? 'admin' : (user?.email === 'aye.victoria.lopez2@gmail.com' ? 'admin' : 'reader');
+
+  // Restrict reader to dashboard and history
+  useEffect(() => {
+    if (role === 'reader' && !['dashboard', 'history'].includes(activeTab)) {
+      // If reader clicks on a restricted view or it tries to load, fall back to dashboard
+      setActiveTab('dashboard');
+    }
+  }, [role, activeTab]);
 
   const handleUpdateProviders = (newProviders) => {
     setProviders(newProviders);
@@ -66,7 +107,8 @@ function App() {
           <Dashboard 
             history={history} 
             providers={providers}
-            onNavigate={setActiveTab} 
+            onNavigate={setActiveTab}
+            readOnly={role === 'reader'}
           />
         );
       
@@ -81,6 +123,7 @@ function App() {
             clearPreloadedItem={() => setPreloadedHistoryItem(null)}
             history={history}
             onNavigate={setActiveTab}
+            readOnly={role === 'reader'}
           />
         );
       
@@ -98,6 +141,7 @@ function App() {
             history={history} 
             onSelectHistoryItem={handleSelectHistoryItem}
             onDeleteHistoryItem={handleDeleteHistoryItem}
+            readOnly={role === 'reader'}
           />
         );
       
@@ -110,11 +154,55 @@ function App() {
         );
 
       default:
-        return <Dashboard history={history} providers={providers} onNavigate={setActiveTab} />;
+        return (
+          <Dashboard 
+            history={history} 
+            providers={providers} 
+            onNavigate={setActiveTab} 
+            readOnly={role === 'reader'}
+          />
+        );
     }
   };
 
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  if (authLoading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        width: '100vw',
+        background: '#0d0e12',
+        color: 'var(--text-primary)',
+        fontFamily: 'Inter, sans-serif'
+      }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            border: '4px solid rgba(139, 92, 246, 0.1)',
+            borderTop: '4px solid var(--primary)',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite'
+          }}></div>
+          <span>Cargando aplicación...</span>
+          <style>{`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}</style>
+        </div>
+      </div>
+    );
+  }
+
+  if (hasSupabase && !user) {
+    return <Login />;
+  }
 
   return (
     <div className={`app-container ${isCollapsed ? 'sidebar-collapsed' : ''}`}>
@@ -123,6 +211,8 @@ function App() {
         setActiveTab={setActiveTab} 
         isCollapsed={isCollapsed} 
         setIsCollapsed={setIsCollapsed} 
+        role={role}
+        hasSupabase={hasSupabase}
       />
       <main className="main-content">
         {renderActiveView()}
@@ -142,7 +232,8 @@ const FileProcessorWrapper = ({
   preloadedItem, 
   clearPreloadedItem,
   history,
-  onNavigate
+  onNavigate,
+  readOnly = false
 }) => {
   const [componentKey, setComponentKey] = useState(0);
 
@@ -167,12 +258,13 @@ const FileProcessorWrapper = ({
       preloadedData={initialStateCalculated}
       history={history}
       onNavigate={onNavigate}
+      readOnly={readOnly}
     />
   );
 };
 
 // Componente secundario que extiende FileProcessor para soportar precarga del historial
-const FileProcessorWithPreload = ({ providers, settings, onSaveSuccess, preloadedData, history, onNavigate }) => {
+const FileProcessorWithPreload = ({ providers, settings, onSaveSuccess, preloadedData, history, onNavigate, readOnly }) => {
   const [initData, setInitData] = React.useState(preloadedData);
 
   return (
@@ -183,12 +275,13 @@ const FileProcessorWithPreload = ({ providers, settings, onSaveSuccess, preloade
       initialCalculation={initData}
       history={history}
       onNavigate={onNavigate}
+      readOnly={readOnly}
     />
   );
 };
 
 // Proxy para inyectar initialCalculation al FileProcessor
-const FileProcessorProxy = ({ providers, settings, onSaveSuccess, initialCalculation, history, onNavigate }) => {
+const FileProcessorProxy = ({ providers, settings, onSaveSuccess, initialCalculation, history, onNavigate, readOnly }) => {
   return (
     <FileProcessorInstance 
       providers={providers}
@@ -197,12 +290,13 @@ const FileProcessorProxy = ({ providers, settings, onSaveSuccess, initialCalcula
       initialCalculation={initialCalculation}
       history={history}
       onNavigate={onNavigate}
+      readOnly={readOnly}
     />
   );
 };
 
 // Instancia final que enlaza la prop initialCalculation
-const FileProcessorInstance = ({ providers, settings, onSaveSuccess, initialCalculation, history, onNavigate }) => {
+const FileProcessorInstance = ({ providers, settings, onSaveSuccess, initialCalculation, history, onNavigate, readOnly }) => {
   return (
     <FileProcessor 
       providers={providers}
@@ -211,6 +305,7 @@ const FileProcessorInstance = ({ providers, settings, onSaveSuccess, initialCalc
       initialCalculation={initialCalculation}
       history={history}
       onNavigate={onNavigate}
+      readOnly={readOnly}
     />
   );
 };

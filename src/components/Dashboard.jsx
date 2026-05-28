@@ -22,7 +22,7 @@ import {
 
 const COLORS = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
 
-const Dashboard = ({ history = [], providers = [], onNavigate }) => {
+const Dashboard = ({ history = [], providers = [], onNavigate, readOnly = false }) => {
   const [selectedPeriod, setSelectedPeriod] = React.useState('latest');
 
   const monthNames = [
@@ -308,10 +308,12 @@ const Dashboard = ({ history = [], providers = [], onNavigate }) => {
             <h2>No hay liquidaciones procesadas</h2>
             <p style={{ marginTop: '0.5rem' }}>Sube tu primer listado de atenciones en Excel para comenzar a visualizar métricas de rendimiento y gráficos mensuales.</p>
           </div>
-          <button className="btn btn-primary" onClick={() => onNavigate('processor')}>
-            Procesar Primer Archivo
-            <ArrowUpRight size={16} />
-          </button>
+          {!readOnly && (
+            <button className="btn btn-primary" onClick={() => onNavigate('processor')}>
+              Procesar Primer Archivo
+              <ArrowUpRight size={16} />
+            </button>
+          )}
         </div>
       )}
     </div>

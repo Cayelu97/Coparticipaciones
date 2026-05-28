@@ -10,7 +10,7 @@ import {
 import { exportToExcel } from '../services/excelExporter';
 import { dbService } from '../services/db';
 
-const HistoryList = ({ history = [], onSelectHistoryItem, onDeleteHistoryItem }) => {
+const HistoryList = ({ history = [], onSelectHistoryItem, onDeleteHistoryItem, readOnly = false }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [loadingId, setLoadingId] = useState('');
 
@@ -33,7 +33,7 @@ const HistoryList = ({ history = [], onSelectHistoryItem, onDeleteHistoryItem })
     } catch (err) {
       alert(`Error al generar el archivo Excel: ${err.message}`);
     } finally {
-      setLoadingId('');
+      loadingId && setLoadingId('');
     }
   };
 
@@ -120,7 +120,7 @@ const HistoryList = ({ history = [], onSelectHistoryItem, onDeleteHistoryItem })
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 40px', gap: '0.5rem', marginTop: 'auto' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: readOnly ? '1fr 1fr' : '1fr 1fr 40px', gap: '0.5rem', marginTop: 'auto' }}>
                 <button 
                   className="btn btn-secondary" 
                   onClick={() => onSelectHistoryItem(item)}
@@ -140,13 +140,15 @@ const HistoryList = ({ history = [], onSelectHistoryItem, onDeleteHistoryItem })
                   {loadingId === item.id ? 'Generando...' : 'Descargar'}
                 </button>
                 
-                <button 
-                  className="btn btn-danger" 
-                  onClick={() => handleDelete(item.id)}
-                  style={{ padding: '0.5rem' }}
-                >
-                  <Trash2 size={14} />
-                </button>
+                {!readOnly && (
+                  <button 
+                    className="btn btn-danger" 
+                    onClick={() => handleDelete(item.id)}
+                    style={{ padding: '0.5rem' }}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                )}
               </div>
             </div>
           ))}
