@@ -79,6 +79,8 @@ function App() {
             onSaveSuccess={handleRefreshHistory}
             preloadedItem={preloadedHistoryItem}
             clearPreloadedItem={() => setPreloadedHistoryItem(null)}
+            history={history}
+            onNavigate={setActiveTab}
           />
         );
       
@@ -138,13 +140,13 @@ const FileProcessorWrapper = ({
   settings, 
   onSaveSuccess, 
   preloadedItem, 
-  clearPreloadedItem 
+  clearPreloadedItem,
+  history,
+  onNavigate
 }) => {
   const [componentKey, setComponentKey] = useState(0);
 
   // Si hay un item precargado, necesitamos inicializar el FileProcessor con ese estado
-  // Para hacer esto de manera elegante, interceptamos y pasamos como props iniciales,
-  // y limpiamos el estado del padre después de montar.
   const [initialStateCalculated, setInitialStateCalculated] = useState(preloadedItem);
 
   useEffect(() => {
@@ -156,11 +158,6 @@ const FileProcessorWrapper = ({
     }
   }, [preloadedItem]);
 
-  // Si tenemos un item precargado del historial, inyectamos sus datos directamente
-  // para que FileProcessor los muestre en el preview de inmediato.
-  const fileProcessorRef = React.useRef(null);
-  
-  // Modificamos ligeramente la inicialización del estado del FileProcessor mediante este wrapper
   return (
     <FileProcessorWithPreload 
       key={componentKey}
@@ -168,54 +165,52 @@ const FileProcessorWrapper = ({
       settings={settings}
       onSaveSuccess={onSaveSuccess}
       preloadedData={initialStateCalculated}
+      history={history}
+      onNavigate={onNavigate}
     />
   );
 };
 
 // Componente secundario que extiende FileProcessor para soportar precarga del historial
-const FileProcessorWithPreload = ({ providers, settings, onSaveSuccess, preloadedData }) => {
-  // Cargamos el FileProcessor normal, pero si hay preloadedData inicializamos el estado con él
+const FileProcessorWithPreload = ({ providers, settings, onSaveSuccess, preloadedData, history, onNavigate }) => {
   const [initData, setInitData] = React.useState(preloadedData);
 
-  // Renderiza el componente FileProcessor, inyectando los valores si existen
   return (
     <FileProcessorProxy 
       providers={providers}
       settings={settings}
       onSaveSuccess={onSaveSuccess}
       initialCalculation={initData}
+      history={history}
+      onNavigate={onNavigate}
     />
   );
 };
 
 // Proxy para inyectar initialCalculation al FileProcessor
-const FileProcessorProxy = ({ providers, settings, onSaveSuccess, initialCalculation }) => {
-  // Importamos y modificamos localmente la inicialización en el render
+const FileProcessorProxy = ({ providers, settings, onSaveSuccess, initialCalculation, history, onNavigate }) => {
   return (
     <FileProcessorInstance 
       providers={providers}
       settings={settings}
       onSaveSuccess={onSaveSuccess}
       initialCalculation={initialCalculation}
+      history={history}
+      onNavigate={onNavigate}
     />
   );
 };
 
 // Instancia final que enlaza la prop initialCalculation
-const FileProcessorInstance = ({ providers, settings, onSaveSuccess, initialCalculation }) => {
-  // Usamos useEffect para inyectar el cálculo inicial al FileProcessor
-  // Para simplificar la inyección, podemos pasar una función de inicialización.
-  // Pero espera, es mucho más limpio si modificamos FileProcessor.jsx para recibir la prop
-  // 'initialCalculation' directamente como su estado inicial!
-  // Sí! Vamos a asegurarnos de que FileProcessor.jsx tenga soporte para una prop `initialCalculation`
-  // para que si se pasa, cargue esa vista previa.
-  // Vamos a actualizar FileProcessor.jsx para soportar esto de inmediato.
+const FileProcessorInstance = ({ providers, settings, onSaveSuccess, initialCalculation, history, onNavigate }) => {
   return (
     <FileProcessor 
       providers={providers}
       settings={settings}
       onSaveSuccess={onSaveSuccess}
       initialCalculation={initialCalculation}
+      history={history}
+      onNavigate={onNavigate}
     />
   );
 };

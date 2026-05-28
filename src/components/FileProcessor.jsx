@@ -14,7 +14,77 @@ import { calculateCoparticipation, recalculateFromAggregated } from '../services
 import { exportToExcel, exportOpGastosToExcel } from '../services/excelExporter';
 import { dbService } from '../services/db';
 
-const FileProcessor = ({ providers = [], settings = {}, onSaveSuccess, initialCalculation }) => {
+const monthNames = [
+  'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+];
+
+// Helper para detectar el mes y año mayoritario a partir de las fechas de las consultas en el Excel
+const detectPeriodFromRows = (rows) => {
+  const monthCounts = {};
+  const yearCounts = {};
+  
+  rows.forEach(r => {
+    let dateStr = r.fechaturno || r.me_fecha;
+    if (!dateStr) return;
+    
+    if (typeof dateStr === 'number') {
+      const date = new Date((dateStr - 25569) * 86400 * 1000);
+      if (!isNaN(date.getTime())) {
+        const m = date.getMonth() + 1;
+        const y = date.getFullYear();
+        monthCounts[m] = (monthCounts[m] || 0) + 1;
+        yearCounts[y] = (yearCounts[y] || 0) + 1;
+      }
+    } else {
+      const dateStrClean = String(dateStr).trim();
+      const parts = dateStrClean.split('/');
+      if (parts.length === 3) {
+        const m = parseInt(parts[1], 10);
+        const y = parseInt(parts[2], 10);
+        if (!isNaN(m) && !isNaN(y)) {
+          monthCounts[m] = (monthCounts[m] || 0) + 1;
+          yearCounts[y] = (yearCounts[y] || 0) + 1;
+        }
+      } else {
+        const date = new Date(dateStrClean);
+        if (!isNaN(date.getTime())) {
+          const m = date.getMonth() + 1;
+          const y = date.getFullYear();
+          monthCounts[m] = (monthCounts[m] || 0) + 1;
+          yearCounts[y] = (yearCounts[y] || 0) + 1;
+        }
+      }
+    }
+  });
+
+  let maxMonth = null, maxMonthCount = 0;
+  for (const [m, count] of Object.entries(monthCounts)) {
+    if (count > maxMonthCount) {
+      maxMonthCount = count;
+      maxMonth = parseInt(m, 10);
+    }
+  }
+  
+  let maxYear = null, maxYearCount = 0;
+  for (const [y, count] of Object.entries(yearCounts)) {
+    if (count > maxYearCount) {
+      maxYearCount = count;
+      maxYear = parseInt(y, 10);
+    }
+  }
+
+  return { month: maxMonth, year: maxYear };
+};
+
+const FileProcessor = ({ 
+  providers = [], 
+  settings = {}, 
+  onSaveSuccess, 
+  initialCalculation,
+  history = [],
+  onNavigate
+}) => {
   const [file, setFile] = useState(null);
   const [rawRows, setRawRows] = useState([]);
   const [calculatedData, setCalculatedData] = useState(null);
@@ -111,10 +181,20 @@ const FileProcessor = ({ providers = [], settings = {}, onSaveSuccess, initialCa
 
         setRawRows(jsonData);
         
+        // Autodetectar el periodo del listado
+        const detected = detectPeriodFromRows(jsonData);
+        if (detected.month && detected.year) {
+          setMonth(detected.month);
+          setYear(detected.year);
+        }
+
         // Ejecutar cálculo inicial
         const results = calculateCoparticipation(jsonData, providers, settings);
         setCalculatedData(results);
-        setSuccess(`Archivo "${selectedFile.name}" cargado exitosamente. Se encontraron ${jsonData.length} registros.`);
+
+        const detectedMonthName = detected.month ? monthNames[detected.month - 1] : '';
+        const detectedPeriodStr = detected.month ? ` de las fechas autodetectadas (${detectedMonthName} ${detected.year})` : '';
+        setSuccess(`Archivo "${selectedFile.name}" cargado exitosamente${detectedPeriodStr}. Se encontraron ${jsonData.length} registros.`);
       } catch (err) {
         console.error(err);
         setError(`Error al procesar el Excel: ${err.message || 'Estructura no válida'}`);
@@ -169,6 +249,16 @@ const FileProcessor = ({ providers = [], settings = {}, onSaveSuccess, initialCa
 
   const handleSaveToHistory = async () => {
     if (!calculatedData) return;
+
+    // Validar si el periodo ya existe en el historial
+    const existing = history.find(h => h.month === month && h.year === year);
+    if (existing) {
+      const confirmOverwrite = window.confirm(
+        `⚠️ Ya existe una liquidación guardada en el historial para el periodo ${month}/${year}.\n\n` +
+        `¿Estás seguro de que deseas sobrescribirla? Esto reemplazará los datos anteriores por completo.`
+      );
+      if (!confirmOverwrite) return;
+    }
     
     const historyItem = {
       month,
@@ -253,99 +343,117 @@ const FileProcessor = ({ providers = [], settings = {}, onSaveSuccess, initialCa
       )
     : [];
 
+  const isViewingHistory = !!initialCalculation;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      <div>
-        <h1>Procesar Listado de Atenciones</h1>
-        <p>Sube el archivo Excel descargado del sistema y genera la planilla de coparticipaciones con fórmulas.</p>
-      </div>
-
-      {/* Configuration options and File Uploader */}
-      <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
-          <div className="input-group">
-            <label>Mes de Liquidación</label>
-            <select value={month} onChange={(e) => setMonth(parseInt(e.target.value))}>
-              <option value={1}>Enero</option>
-              <option value={2}>Febrero</option>
-              <option value={3}>Marzo</option>
-              <option value={4}>Abril</option>
-              <option value={5}>Mayo</option>
-              <option value={6}>Junio</option>
-              <option value={7}>Julio</option>
-              <option value={8}>Agosto</option>
-              <option value={9}>Septiembre</option>
-              <option value={10}>Octubre</option>
-              <option value={11}>Noviembre</option>
-              <option value={12}>Diciembre</option>
-            </select>
+      {isViewingHistory ? (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <div>
+            <h1>Visualizar Proceso Guardado</h1>
+            <p>Mostrando registro histórico de liquidación para el periodo: <strong>{monthNames[month - 1]} de {year}</strong>.</p>
           </div>
-
-          <div className="input-group">
-            <label>Año</label>
-            <select value={year} onChange={(e) => setYear(parseInt(e.target.value))}>
-              <option value={2026}>2026</option>
-              <option value={2027}>2027</option>
-              <option value={2028}>2028</option>
-            </select>
-          </div>
+          <button className="btn btn-secondary" onClick={() => onNavigate && onNavigate('history')}>
+            Volver al Historial
+          </button>
         </div>
+      ) : (
+        <div>
+          <h1>Procesar Listado de Atenciones</h1>
+          <p>Sube el archivo Excel descargado del sistema y genera la planilla de coparticipaciones con fórmulas.</p>
+        </div>
+      )}
 
-        {/* Drag and drop zone */}
-        <div 
-          className="dropzone"
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
-          onClick={() => fileInputRef.current.click()}
-        >
-          <UploadCloud size={48} className="dropzone-icon" />
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            onChange={handleFileChange} 
-            accept=".xlsx, .xls"
-            style={{ display: 'none' }}
-          />
-          {file ? (
-            <div>
-              <p style={{ color: 'var(--text-primary)', fontWeight: '600' }}>{file.name}</p>
-              <p style={{ fontSize: '0.875rem', marginTop: '0.25rem' }}>Haga clic o arrastre para reemplazar el archivo</p>
+      {/* Opciones de configuración y cargador de archivos - Ocultar al ver historial */}
+      {!isViewingHistory && (
+        <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+            <div className="input-group">
+              <label>Mes de Liquidación</label>
+              <select value={month} onChange={(e) => setMonth(parseInt(e.target.value))}>
+                <option value={1}>Enero</option>
+                <option value={2}>Febrero</option>
+                <option value={3}>Marzo</option>
+                <option value={4}>Abril</option>
+                <option value={5}>Mayo</option>
+                <option value={6}>Junio</option>
+                <option value={7}>Julio</option>
+                <option value={8}>Agosto</option>
+                <option value={9}>Septiembre</option>
+                <option value={10}>Octubre</option>
+                <option value={11}>Noviembre</option>
+                <option value={12}>Diciembre</option>
+              </select>
             </div>
-          ) : (
-            <div>
-              <p style={{ color: 'var(--text-primary)', fontWeight: '600' }}>Arrastra tu archivo Excel aquí</p>
-              <p style={{ fontSize: '0.875rem', marginTop: '0.25rem' }}>O haz clic para explorar tus carpetas locales</p>
+
+            <div className="input-group">
+              <label>Año</label>
+              <select value={year} onChange={(e) => setYear(parseInt(e.target.value))}>
+                <option value={2026}>2026</option>
+                <option value={2027}>2027</option>
+                <option value={2028}>2028</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Zona de arrastrar y soltar */}
+          <div 
+            className="dropzone"
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current.click()}
+          >
+            <UploadCloud size={48} className="dropzone-icon" />
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleFileChange} 
+              accept=".xlsx, .xls"
+              style={{ display: 'none' }}
+            />
+            {file ? (
+              <div>
+                <p style={{ color: 'var(--text-primary)', fontWeight: '600' }}>{file.name}</p>
+                <p style={{ fontSize: '0.875rem', marginTop: '0.25rem' }}>Haga clic o arrastre para reemplazar el archivo</p>
+              </div>
+            ) : (
+              <div>
+                <p style={{ color: 'var(--text-primary)', fontWeight: '600' }}>Arrastra tu archivo Excel aquí</p>
+                <p style={{ fontSize: '0.875rem', marginTop: '0.25rem' }}>O haz clic para explorar tus carpetas locales</p>
+              </div>
+            )}
+          </div>
+
+          {loading && <p style={{ color: 'var(--primary)', fontWeight: '600' }}>Procesando archivo...</p>}
+
+          {error && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--danger)', padding: '1rem', background: 'var(--danger-bg)', borderRadius: '10px' }}>
+              <AlertCircle size={20} />
+              <span>{error}</span>
+            </div>
+          )}
+
+          {success && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--success)', padding: '1rem', background: 'var(--success-bg)', borderRadius: '10px' }}>
+              <CheckCircle2 size={20} />
+              <span>{success}</span>
             </div>
           )}
         </div>
+      )}
 
-        {loading && <p style={{ color: 'var(--primary)', fontWeight: '600' }}>Procesando archivo...</p>}
-
-        {error && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--danger)', padding: '1rem', background: 'var(--danger-bg)', borderRadius: '10px' }}>
-            <AlertCircle size={20} />
-            <span>{error}</span>
-          </div>
-        )}
-
-        {success && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--success)', padding: '1rem', background: 'var(--success-bg)', borderRadius: '10px' }}>
-            <CheckCircle2 size={20} />
-            <span>{success}</span>
-          </div>
-        )}
-      </div>
-
-      {/* Calculations Preview Table */}
+      {/* Tabla de Vista Previa de Cálculos */}
       {calculatedData && (
         <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-            <h2>Vista Previa de Liquidación ({month}/{year})</h2>
+            <h2>{isViewingHistory ? 'Liquidación Histórica Guardada' : 'Vista Previa de Liquidación'} ({month}/{year})</h2>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <button className="btn btn-secondary" onClick={handleSaveToHistory}>
-                <Save size={16} />
-                Guardar Historial
-              </button>
+              {!isViewingHistory && (
+                <button className="btn btn-secondary" onClick={handleSaveToHistory}>
+                  <Save size={16} />
+                  Guardar Historial
+                </button>
+              )}
               <button className="btn btn-secondary" onClick={handleDownloadOpGastos} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                 <FileSpreadsheet size={16} />
                 Exportar OP Gastos
@@ -354,6 +462,11 @@ const FileProcessor = ({ providers = [], settings = {}, onSaveSuccess, initialCa
                 <Download size={16} />
                 Descargar Excel con Fórmulas
               </button>
+              {isViewingHistory && (
+                <button className="btn btn-secondary" onClick={() => onNavigate && onNavigate('history')}>
+                  Volver
+                </button>
+              )}
             </div>
           </div>
 
