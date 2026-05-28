@@ -1,0 +1,2175 @@
+[
+  {
+    "row": 4,
+    "service": "Alergia e Inmunología",
+    "mat": 10709,
+    "prof": "Andrenacci, Miriam",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E4*D4",
+      "col_j": "=I4*D4",
+      "col_m": "=L4*$D$4",
+      "col_p": "=O4*D4",
+      "col_q": "=F4+J4+M4+P4",
+      "col_s": null,
+      "col_t": "=Q4"
+    },
+    "raw_services": [
+      "ALERGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 5,
+    "service": "33-Alergia e Inmunología",
+    "mat": 19641,
+    "prof": "Vich, Alejandra",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E5*D5",
+      "col_j": "=I5*D5",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F5+J5+M5+P5",
+      "col_s": "=SUM(Q4:Q5)",
+      "col_t": "=Q5"
+    },
+    "raw_services": [
+      "ALERGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 6,
+    "service": "ANATOMÍA PAT.",
+    "mat": 28692,
+    "prof": "Giraudo, Pedro",
+    "pct_copart": null,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": null,
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=E6",
+      "col_s": null,
+      "col_t": null
+    },
+    "raw_services": [
+      "ANATOMIA PATOLOGICA"
+    ],
+    "exclude_coseguros": true,
+    "exclude_directs": false
+  },
+  {
+    "row": 7,
+    "service": "9-C.RESONANCIA",
+    "mat": 31753,
+    "prof": "Centro de Resonancia",
+    "pct_copart": 0.23,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E7*D7",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F7+J7+M7+P7",
+      "col_s": "=SUM(Q7)",
+      "col_t": "=Q7"
+    },
+    "raw_services": [
+      "RESONANCIA MAGNETICA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 8,
+    "service": "Clínica Quirúrgica",
+    "mat": 18345,
+    "prof": "Cooke, José Alberto",
+    "pct_copart": 0.3,
+    "pct_dist": 0.4,
+    "rule": "percentage_dist",
+    "formulas": {
+      "col_f": "=E8*D8",
+      "col_j": "=D8*E8",
+      "col_m": "=L8*E8",
+      "col_p": "=O8*E8",
+      "col_q": "=F8+J8+M8+P8",
+      "col_s": null,
+      "col_t": "=$S$11*R8"
+    },
+    "raw_services": [
+      "GEOM CIRUGIA GENERAL"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 9,
+    "service": "Clínica Quirúrgica",
+    "mat": 24425,
+    "prof": "Matus, Gustavo ",
+    "pct_copart": 0.3,
+    "pct_dist": 0.37,
+    "rule": "percentage_dist",
+    "formulas": {
+      "col_f": "=E9*D9",
+      "col_j": "=I9*D9",
+      "col_m": "=L9*D9",
+      "col_p": null,
+      "col_q": "=F9+J9+M9+P9",
+      "col_s": null,
+      "col_t": "=$S$11*R9"
+    },
+    "raw_services": [
+      "CIRUGIA GENERAL"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 10,
+    "service": "1-Clínica Quirúrgica",
+    "mat": 33008,
+    "prof": "Zurita, Gonzalo",
+    "pct_copart": 0.3,
+    "pct_dist": 0.23,
+    "rule": "percentage_dist",
+    "formulas": {
+      "col_f": "=E10*D10",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F10+J10+M10+P10",
+      "col_s": null,
+      "col_t": "=$S$11*R10"
+    },
+    "raw_services": [
+      "CIRUGIA GENERAL"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 11,
+    "service": "1-Clínica Quirúrgica",
+    "mat": 6666,
+    "prof": "RESID. CX GRAL",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E11*D11",
+      "col_j": "=I11*D11",
+      "col_m": "=L11*D11",
+      "col_p": "=O11*$D11",
+      "col_q": "=F11+J11+M11+P11",
+      "col_s": "=SUM(Q8:Q11)",
+      "col_t": null
+    },
+    "raw_services": [
+      "CIRUGIA GENERAL"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 12,
+    "service": "Clínica Médica ",
+    "mat": 19788,
+    "prof": "Manzone, Gustavo",
+    "pct_copart": 0.2,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E12*D12",
+      "col_j": "=I12*D12",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F12+J12+M12+P12",
+      "col_s": null,
+      "col_t": "=Q12"
+    },
+    "raw_services": [
+      "CLINICA MEDICA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 13,
+    "service": "14-Clínica Médica ",
+    "mat": 19541,
+    "prof": "Bravo, Eduardo O.",
+    "pct_copart": 0.2,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E13*D13",
+      "col_j": "=I13*D13",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F13+J13+M13+P13",
+      "col_s": "=SUM(Q12:Q13)",
+      "col_t": "=Q13"
+    },
+    "raw_services": [
+      "CLINICA MEDICA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 14,
+    "service": "Cx Vasc. Perif.",
+    "mat": 23188,
+    "prof": "Fontaine, Cristian",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": "sum_of_group",
+    "formulas": {
+      "col_f": "=E14*D14",
+      "col_j": "=I14*D14",
+      "col_m": null,
+      "col_p": "=O14*$D14",
+      "col_q": "=F14+J14+M14+P14",
+      "col_s": null,
+      "col_t": "=S15"
+    },
+    "raw_services": [
+      "CIRUGIA VASCULAR PERIFERICA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 15,
+    "service": "26-Cx Vasc. Perif.",
+    "mat": 39206,
+    "prof": "PELAEZ RODRIGO",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E15*D15",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F15+J15+M15+P15",
+      "col_s": "=SUM(Q14+Q15)",
+      "col_t": null
+    },
+    "raw_services": [
+      "CIRUGIA VASCULAR PERIFERICA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 16,
+    "service": "Cirugía Plástica",
+    "mat": 27377,
+    "prof": "Romero Arena, F.",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E16*D16",
+      "col_j": null,
+      "col_m": null,
+      "col_p": "=O16*$D16",
+      "col_q": "=F16+J16+M16+P16",
+      "col_s": null,
+      "col_t": "=Q16"
+    },
+    "raw_services": [
+      "CIRUGIA PLASTICA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 17,
+    "service": "20-Cirugía Plástica",
+    "mat": 26059,
+    "prof": "Paoletti, Javier",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E17*D17",
+      "col_j": "=I17*D17",
+      "col_m": null,
+      "col_p": "=O17*$D17",
+      "col_q": "=F17+J17+M17+P17",
+      "col_s": "=SUM(Q16+Q17)",
+      "col_t": "=Q17"
+    },
+    "raw_services": [
+      "CIRUGIA PLASTICA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 18,
+    "service": "40-Cirugía Hepática / Percutanea",
+    "mat": 40498,
+    "prof": "Alvarez, Fernando ",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E18*D18",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F18+J18+M18+P18",
+      "col_s": "=Q18",
+      "col_t": "=Q18"
+    },
+    "raw_services": [],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 19,
+    "service": "Cirugía de Torax",
+    "mat": 36854,
+    "prof": "Duran, Natalia",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E19*D19",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F19+J19+M19+P19",
+      "col_s": null,
+      "col_t": "=Q19"
+    },
+    "raw_services": [],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 20,
+    "service": "36-Cirugía de Torax",
+    "mat": 17696,
+    "prof": "Repetti, Jose Luis",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E20*D20",
+      "col_j": null,
+      "col_m": null,
+      "col_p": "=O20*$D20",
+      "col_q": "=F20+J20+M20+P20",
+      "col_s": "=SUM(Q19+Q20)",
+      "col_t": "=Q20"
+    },
+    "raw_services": [
+      "CIRUGIA DE TORAX"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 21,
+    "service": "Cirugía Cabeza y Cuello",
+    "mat": 17704,
+    "prof": "Corball Alberto",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E21*D21",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F21+J21+M21+P21",
+      "col_s": null,
+      "col_t": "=Q21"
+    },
+    "raw_services": [],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 22,
+    "service": "Cirugía Cabeza y Cuello",
+    "mat": 37080,
+    "prof": "Menso, Nicolás",
+    "pct_copart": 0.35,
+    "pct_dist": 0.5,
+    "rule": "percentage_dist",
+    "formulas": {
+      "col_f": "=E22*D22",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F22+J22+M22+P22",
+      "col_s": null,
+      "col_t": "=$S$23*R22"
+    },
+    "raw_services": [
+      "CIRUGIA CABEZA Y CUELLO"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 23,
+    "service": "35-Cirugía Cabeza y Cuello",
+    "mat": 31450,
+    "prof": "Flores, Gabriel Alejandro",
+    "pct_copart": 0.35,
+    "pct_dist": 0.5,
+    "rule": "percentage_dist",
+    "formulas": {
+      "col_f": "=E23*D23",
+      "col_j": "=I23*D23",
+      "col_m": null,
+      "col_p": "=O23*$D23",
+      "col_q": "=F23+J23+M23+P23",
+      "col_s": "=SUM(Q21:Q23)",
+      "col_t": "=$S$23*R23"
+    },
+    "raw_services": [
+      "CIRUGIA CABEZA Y CUELLO"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 24,
+    "service": "Cirugía Cardíaca",
+    "mat": 32233,
+    "prof": "GUEVARA",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E24*D24",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F24+J24+M24+P24",
+      "col_s": null,
+      "col_t": "=Q24"
+    },
+    "raw_services": [],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 25,
+    "service": "22-Cirugía Cardíaca",
+    "mat": 27950,
+    "prof": "BOCHINFUSO MATIAS",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E25*D25",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F25+J25+M25+P25",
+      "col_s": "=SUM(Q24+Q25)",
+      "col_t": "=Q25"
+    },
+    "raw_services": [],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 26,
+    "service": "CARDIOLOGIA",
+    "mat": "SERV.",
+    "prof": "ERGO",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E26*D26",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": null,
+      "col_s": null,
+      "col_t": null
+    },
+    "raw_services": [
+      "ERGOMETRIAS"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 27,
+    "service": "CARDIOLOGIA",
+    "mat": "SERV.",
+    "prof": "HOLTER",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E27*D27",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": null,
+      "col_s": null,
+      "col_t": null
+    },
+    "raw_services": [
+      "HOLTERS"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 28,
+    "service": "CARDIOLOGIA",
+    "mat": "SERV.",
+    "prof": "MAPAS",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E28*D28",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": null,
+      "col_s": null,
+      "col_t": null
+    },
+    "raw_services": [
+      "MAPA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 29,
+    "service": "CARDIOLOGIA",
+    "mat": "SERV.",
+    "prof": "DOPPLER CARD",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E29*D29",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": null,
+      "col_s": null,
+      "col_t": null
+    },
+    "raw_services": [
+      "ECODOPPLER CARDIACO"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 30,
+    "service": "CARDIOLOGIA",
+    "mat": 34227,
+    "prof": "Costantino, Ana Laura",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E30*D30",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": null,
+      "col_s": null,
+      "col_t": null
+    },
+    "raw_services": [
+      "ECO DOPPLER (MM II, Vasos del cuello, Renal)"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 31,
+    "service": "CARDIOLOGIA",
+    "mat": 15609,
+    "prof": "Anauch, Daniel",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=(E31*D31)+F26+F27+F28+F29+F30",
+      "col_j": "=I31*D31",
+      "col_m": null,
+      "col_p": "=O31*$D31",
+      "col_q": "=F31+J31+M31+P31",
+      "col_s": null,
+      "col_t": "=Q31"
+    },
+    "raw_services": [
+      "CARDIOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 32,
+    "service": "CARDIOLOGIA",
+    "mat": 33728,
+    "prof": "Bueno, German ",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E32*D32",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F32+J32+M32+P32",
+      "col_s": null,
+      "col_t": "=Q32"
+    },
+    "raw_services": [
+      "CARDIOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 33,
+    "service": "CARDIOLOGIA",
+    "mat": 34774,
+    "prof": "Coscia, Esteban",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E33*D33",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F33+J33+M33+P33",
+      "col_s": null,
+      "col_t": "=Q33"
+    },
+    "raw_services": [
+      "CARDIOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 34,
+    "service": "CARDIOLOGIA",
+    "mat": 40353,
+    "prof": "Vallejo, Nicolas",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E34*D34",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F34+J34+M34+P34",
+      "col_s": "=SUM(Q26:Q34)",
+      "col_t": "=Q34"
+    },
+    "raw_services": [
+      "CARDIOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 35,
+    "service": "Dermatología",
+    "mat": 12196,
+    "prof": "Caminos, Raúl",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E35*D35",
+      "col_j": "=I35*D35",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F35+J35+M35+P35",
+      "col_s": null,
+      "col_t": "=Q35"
+    },
+    "raw_services": [
+      "DERMATOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 36,
+    "service": "19-Dermatología",
+    "mat": 39745,
+    "prof": "Mandrile, Ma Julia",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E36*D36",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F36+J36+M36+P36",
+      "col_s": "=SUM(Q35:Q36)",
+      "col_t": "=Q36"
+    },
+    "raw_services": [
+      "DERMATOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 37,
+    "service": "Endocrinología",
+    "mat": 24862,
+    "prof": "Sanchez Sandona,C",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E37*D37",
+      "col_j": "=I37*D37",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F37+J37+M37+P37",
+      "col_s": null,
+      "col_t": "=Q37"
+    },
+    "raw_services": [
+      "ENDOCRINOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 38,
+    "service": "25-Endocrinología",
+    "mat": 35424,
+    "prof": "Borgonovo, Jose",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E38*D38",
+      "col_j": "=I38*D38",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F38+J38+M38+P38",
+      "col_s": "=Q39",
+      "col_t": "=Q38"
+    },
+    "raw_services": [
+      "ENDOCRINOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 39,
+    "service": "37-Fonoaudiología",
+    "mat": 7409,
+    "prof": "Serlin, Debora",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E39*D39",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F39+J39+M39+P39",
+      "col_s": "=Q39",
+      "col_t": "=Q39"
+    },
+    "raw_services": [
+      "FONOAUDIOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 40,
+    "service": "GEOM",
+    "mat": 19935,
+    "prof": "Andino, Sandra",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E40*D40",
+      "col_j": "=I40*D40",
+      "col_m": "=L40*D40",
+      "col_p": "=O40*$D40",
+      "col_q": "=F40+J40+M40+P40",
+      "col_s": null,
+      "col_t": "=Q40"
+    },
+    "raw_services": [
+      "GEOM CLINICA MEDICA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 41,
+    "service": "GEOM",
+    "mat": 2130,
+    "prof": "Lukasiewicz, Mónica",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E41*D41",
+      "col_j": null,
+      "col_m": null,
+      "col_p": "=O41*$D41",
+      "col_q": "=F41+J41+M41+P41",
+      "col_s": null,
+      "col_t": "=Q41"
+    },
+    "raw_services": [
+      "GEOM CLINICA MEDICA",
+      "GEOM NUTRICIÓN",
+      "NUTRICION"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 42,
+    "service": "GEOM",
+    "mat": 5197,
+    "prof": "Rodriguez Obligado Micaela",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E42*D42",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F42+J42+M42+P42",
+      "col_s": null,
+      "col_t": "=Q42"
+    },
+    "raw_services": [
+      "GEOM NUTRICIÓN"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 43,
+    "service": "GEOM",
+    "mat": 25881,
+    "prof": "Bonfil Adrian",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E43*D43",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F43+J43+M43+P43",
+      "col_s": null,
+      "col_t": "=Q43"
+    },
+    "raw_services": [
+      "GEOM CLINICA MEDICA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 44,
+    "service": "41-GEOM",
+    "mat": 7829,
+    "prof": "Claria, Jorge A.",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E44*D44",
+      "col_j": "=I44*D44",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F44+J44+M44+P44",
+      "col_s": "=SUM(Q40:Q44)",
+      "col_t": "=Q44"
+    },
+    "raw_services": [
+      "GEOM CIRUGIA GENERAL"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 45,
+    "service": "Gastroenterología + Est. GASTRO",
+    "mat": 20865,
+    "prof": "Iriarte, Horacio ",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E45*D45",
+      "col_j": "=I45*D45",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F45+J45+M45+P45",
+      "col_s": null,
+      "col_t": "=Q45"
+    },
+    "raw_services": [
+      "ESTUDIOS DE GASTROENTEROLOGIA",
+      "GASTROENTEROLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 46,
+    "service": "Gastroenterología + Est. GASTRO",
+    "mat": 28983,
+    "prof": "Bonaparte, Fernando",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E46*D46",
+      "col_j": "=I46*D46",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F46+J46+M46+P46",
+      "col_s": null,
+      "col_t": "=Q46"
+    },
+    "raw_services": [
+      "ESTUDIOS DE GASTROENTEROLOGIA",
+      "GASTROENTEROLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 47,
+    "service": "6-Gastroenterología",
+    "mat": 23627,
+    "prof": "Strumia, Silvina ",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E47*D47",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F47+J47+M47+P47",
+      "col_s": "=SUM(Q45:Q47)",
+      "col_t": "=Q47"
+    },
+    "raw_services": [
+      "GASTROENTEROLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 48,
+    "service": "Ginecología",
+    "mat": 16905,
+    "prof": "Gil, Ana María",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E48*D48",
+      "col_j": "=I48*D48",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F48+J48+M48+P48",
+      "col_s": null,
+      "col_t": "=Q48"
+    },
+    "raw_services": [
+      "GINECOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 49,
+    "service": "Ginecología",
+    "mat": 22467,
+    "prof": "Arrechea, Mariana",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E49*D49",
+      "col_j": "=I49*D49",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F49+J49+M49+P49",
+      "col_s": null,
+      "col_t": "=Q49"
+    },
+    "raw_services": [
+      "GINECOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 50,
+    "service": "Ginecología",
+    "mat": 24168,
+    "prof": "Capovilla, Claudia",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E50*D50",
+      "col_j": "=I50*D50",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F50+J50+M50+P50",
+      "col_s": null,
+      "col_t": "=Q50"
+    },
+    "raw_services": [
+      "GINECOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 51,
+    "service": "Ginecología",
+    "mat": 29857,
+    "prof": "Piovano, Maria P.",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E51*D51",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F51+J51+M51+P51",
+      "col_s": null,
+      "col_t": "=Q51"
+    },
+    "raw_services": [
+      "GINECOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 52,
+    "service": "10-Ginecología",
+    "mat": 23995,
+    "prof": "Canavesio Carola",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E52*D52",
+      "col_j": "=I52*D52",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F52+J52+M52+P52",
+      "col_s": "=SUM(Q48:Q52)",
+      "col_t": "=Q52"
+    },
+    "raw_services": [
+      "GINECOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 53,
+    "service": "23-HEMATOLOGIA",
+    "mat": null,
+    "prof": "AUDENINO",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E53*D53",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F53+J53+M53+P53",
+      "col_s": "=Q53",
+      "col_t": "=Q53"
+    },
+    "raw_services": [],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 54,
+    "service": "Infectología y Bacteriología",
+    "mat": 6445,
+    "prof": "Ambasch, Germán",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E54*D54",
+      "col_j": "=I54*D54",
+      "col_m": null,
+      "col_p": "=O54*$D54",
+      "col_q": "=F54+J54+M54+P54",
+      "col_s": null,
+      "col_t": "=Q54"
+    },
+    "raw_services": [
+      "INFECTOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 55,
+    "service": "24-Infectología y Bacteriología",
+    "mat": 18575,
+    "prof": "Maldonado, Miriam",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E55*D55",
+      "col_j": "=I55*D55",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F55+J55+M55+P55",
+      "col_s": "=SUM(Q54:Q55)",
+      "col_t": "=Q55"
+    },
+    "raw_services": [
+      "INFECTOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 56,
+    "service": "Kinesiología",
+    "mat": 1206,
+    "prof": "Leonardi, María F.",
+    "pct_copart": 0.2,
+    "pct_dist": 0.5,
+    "rule": "percentage_dist",
+    "formulas": {
+      "col_f": "=(E56+E57)*D56",
+      "col_j": "=I56*D56",
+      "col_m": null,
+      "col_p": "=O56*$D56",
+      "col_q": "=F56+J56+M56+P56",
+      "col_s": null,
+      "col_t": "=S57*R56"
+    },
+    "raw_services": [
+      "FISIOTERAPIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 57,
+    "service": "18-Kinesiología",
+    "mat": 2160,
+    "prof": "Trossero, Silvina",
+    "pct_copart": null,
+    "pct_dist": 0.5,
+    "rule": "percentage_dist",
+    "formulas": {
+      "col_f": null,
+      "col_j": null,
+      "col_m": null,
+      "col_p": "=O57*$D57",
+      "col_q": "60000.0",
+      "col_s": "=SUM(Q56:Q57)",
+      "col_t": "=S57*R57"
+    },
+    "raw_services": [
+      "FISIOTERAPIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 58,
+    "service": "4-LABORATORIO",
+    "mat": null,
+    "prof": "Martinez, Marcelo ",
+    "pct_copart": null,
+    "pct_dist": null,
+    "rule": "sum_of_group",
+    "formulas": {
+      "col_f": "1500000.0",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F58+J58+M58",
+      "col_s": "=Q58",
+      "col_t": "=S58"
+    },
+    "raw_services": [],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 59,
+    "service": "Nefrología",
+    "mat": 17255,
+    "prof": "Aliciardi, Enrique",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E59*D59",
+      "col_j": "=I59*D59",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F59+J59+M59+P59",
+      "col_s": null,
+      "col_t": "=Q59"
+    },
+    "raw_services": [
+      "NEFROLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 60,
+    "service": "11-Nefrología",
+    "mat": 30027,
+    "prof": "Andres, Judith Elizabeth",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E60*D60",
+      "col_j": "=I60*D60",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F60+J60+M60+P60",
+      "col_s": "=SUM(Q59:Q60)",
+      "col_t": "=Q60"
+    },
+    "raw_services": [
+      "NEFROLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 61,
+    "service": "32-Neumonología",
+    "mat": 18392,
+    "prof": "Perez, Jose",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E61*D61",
+      "col_j": "=I61*D61",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F61+J61+M61+P61",
+      "col_s": "=Q61",
+      "col_t": "=Q61"
+    },
+    "raw_services": [
+      "NEUMONOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 62,
+    "service": "12-Neurocirugía",
+    "mat": 26199,
+    "prof": "Berra, Matías S.",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E62*D62",
+      "col_j": null,
+      "col_m": null,
+      "col_p": "=O62*$D62",
+      "col_q": "=F62+J62+M62+P62",
+      "col_s": null,
+      "col_t": "=Q62"
+    },
+    "raw_services": [
+      "NEUROCIRUGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 63,
+    "service": "12-Neurocirugía",
+    "mat": 33763,
+    "prof": "Sanchez, Javier",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E63*D63",
+      "col_j": null,
+      "col_m": null,
+      "col_p": "=O63*$D63",
+      "col_q": "=F63+J63+M63+P63",
+      "col_s": null,
+      "col_t": "=Q63"
+    },
+    "raw_services": [
+      "NEUROCIRUGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 64,
+    "service": "12-Neurocirugía",
+    "mat": 40924,
+    "prof": "Almagro Allende Stefania",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E64*D64",
+      "col_j": null,
+      "col_m": null,
+      "col_p": "=O64*$D64",
+      "col_q": "=F64+J64+M64+P64",
+      "col_s": "=SUM(Q62:Q64)",
+      "col_t": "=Q64"
+    },
+    "raw_services": [
+      "NEUROCIRUGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 65,
+    "service": "Neurología",
+    "mat": 27071,
+    "prof": "Bohemi, Javier",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E65*D65",
+      "col_j": "=I65*D65",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F65+J65+M65+P65",
+      "col_s": null,
+      "col_t": "=Q65",
+      "col_h": "=G66*$H$3"
+    },
+    "raw_services": [
+      "NEUROLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 66,
+    "service": "29-Neurología",
+    "mat": 32404,
+    "prof": "Alfonso, Natalia",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E66*D66",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F66+J66+M66+P66",
+      "col_s": "=SUM(Q65:Q66)",
+      "col_t": "=Q66"
+    },
+    "raw_services": [
+      "NEUROLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 67,
+    "service": "28-Nutrición",
+    "mat": 4977,
+    "prof": "De Bedia Quintana",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E67*D67",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F67+J67+M67+P67",
+      "col_s": "=Q67",
+      "col_t": "=Q67"
+    },
+    "raw_services": [
+      "NUTRICION"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 68,
+    "service": "Oftalmología",
+    "mat": 20244,
+    "prof": "Gonzalez Castellanos, Jeronimo",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E68*D68",
+      "col_j": "=I68*D68",
+      "col_m": "=L68*D68",
+      "col_p": "=O68*$D68",
+      "col_q": "=F68+J68+M68+P68",
+      "col_s": null,
+      "col_t": "=Q68"
+    },
+    "raw_services": [
+      "OFTALMOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 69,
+    "service": "Oftalmología",
+    "mat": 43900,
+    "prof": "Gonzalez Castellanos, Ma. Sofia",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E69*D69",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F69+J69+M69+P69",
+      "col_s": null,
+      "col_t": "=Q69"
+    },
+    "raw_services": [
+      "OFTALMOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 70,
+    "service": "Oftalmología",
+    "mat": 41401,
+    "prof": "Gonzalez Castellanos, J.Cruz",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E70*D70",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F70+J70+M70+P70",
+      "col_s": null,
+      "col_t": "=Q70"
+    },
+    "raw_services": [],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 71,
+    "service": "Oftalmología",
+    "mat": 26782,
+    "prof": "Alvarez, Ma. Alejandra",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E71*D71",
+      "col_j": "=I71*D71",
+      "col_m": "=L71*D71",
+      "col_p": "=O71*$D71",
+      "col_q": "=F71+J71+M71+P71",
+      "col_s": null,
+      "col_t": "=Q71"
+    },
+    "raw_services": [],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 72,
+    "service": "13-Oftalmología",
+    "mat": 9952,
+    "prof": "Lauria, Luis",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E72*D72",
+      "col_j": "=I72*D72",
+      "col_m": "=L72*D72",
+      "col_p": "=O72*$D72",
+      "col_q": "=F72+J72+M72+P72",
+      "col_s": "=SUM(Q68:Q72)",
+      "col_t": "=Q72"
+    },
+    "raw_services": [
+      "OFTALMOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 73,
+    "service": "21-ORL",
+    "mat": 43265,
+    "prof": "Freire Buteler, Ignacio",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E73*D73",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F73+J73+M73+P73",
+      "col_s": "=Q73",
+      "col_t": "=Q73"
+    },
+    "raw_services": [
+      "O.R.L."
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 74,
+    "service": "Oncología",
+    "mat": 36791,
+    "prof": "Acosta, Luciana",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": "split_equal",
+    "formulas": {
+      "col_f": "=E74*D74",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F74+J74+M74+P74",
+      "col_s": null,
+      "col_t": "=$S$79/6"
+    },
+    "raw_services": [
+      "ONCOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 75,
+    "service": "Oncología",
+    "mat": 40985,
+    "prof": "Magi, Ignacio",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": "split_equal",
+    "formulas": {
+      "col_f": "=E75*D75",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F75+J75+M75+P75",
+      "col_s": null,
+      "col_t": "=$S$79/6"
+    },
+    "raw_services": [
+      "ONCOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 76,
+    "service": "Oncología",
+    "mat": 33699,
+    "prof": "Molina, Matias",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": "split_equal",
+    "formulas": {
+      "col_f": "=E76*D76",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F76+J76+M76+P76",
+      "col_s": null,
+      "col_t": "=$S$79/6"
+    },
+    "raw_services": [
+      "ONCOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 77,
+    "service": "Oncología",
+    "mat": 8308,
+    "prof": "Richardet, Eduardo",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": "split_equal",
+    "formulas": {
+      "col_f": "=E77*D77",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F77+J77+M77+P77",
+      "col_s": null,
+      "col_t": "=$S$79/6"
+    },
+    "raw_services": [
+      "ONCOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 78,
+    "service": "Oncología",
+    "mat": 42429,
+    "prof": "Perea, Pablo",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": "split_equal",
+    "formulas": {
+      "col_f": "=E78*D78",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F78+J78+M78+P78",
+      "col_s": null,
+      "col_t": "=$S$79/6"
+    },
+    "raw_services": [
+      "ONCOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 79,
+    "service": "15-Oncología",
+    "mat": 8308,
+    "prof": "Richardet, Valeria",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": "split_equal",
+    "formulas": {
+      "col_f": "=E79*D79",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F79+J79+M79+P79",
+      "col_s": "=SUM(Q74:Q79)",
+      "col_t": "=$S$79/6"
+    },
+    "raw_services": [
+      "ONCOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 80,
+    "service": "31-Psicología",
+    "mat": 3247,
+    "prof": "Lucero Monica",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E80*D80",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F80+J80+M80+P80",
+      "col_s": "=Q80",
+      "col_t": "=Q80"
+    },
+    "raw_services": [
+      "GEOM PSICOLOGIA",
+      "PSICOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 81,
+    "service": "Reumatología",
+    "mat": 17171,
+    "prof": "Moriondo, Ruth",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E81*D81",
+      "col_j": "=I81*D81",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F81+J81+M81+P81",
+      "col_s": null,
+      "col_t": "=Q81"
+    },
+    "raw_services": [
+      "REUMATOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 82,
+    "service": "34-Reumatología",
+    "mat": 22654,
+    "prof": "Díaz, Cecilia",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E82*D82",
+      "col_j": "=I82*D82",
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F82+J82+M82+P82",
+      "col_s": "=SUM(Q81:Q82)",
+      "col_t": "=Q82"
+    },
+    "raw_services": [
+      "REUMATOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 83,
+    "service": "Traumatología",
+    "mat": 44669,
+    "prof": "Roldan, Lucas",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E83*D83",
+      "col_j": "=I83*D83",
+      "col_m": "=L83*D83",
+      "col_p": null,
+      "col_q": null,
+      "col_s": null,
+      "col_t": null
+    },
+    "raw_services": [
+      "TRAUMATOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 84,
+    "service": "Traumatología",
+    "mat": 44335,
+    "prof": "Campos Ayrton",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E84*D84",
+      "col_j": "=I84*D84",
+      "col_m": "=L84*D84",
+      "col_p": null,
+      "col_q": null,
+      "col_s": null,
+      "col_t": null
+    },
+    "raw_services": [
+      "TRAUMATOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 85,
+    "service": "Traumatología",
+    "mat": 44406,
+    "prof": "Masud Karim",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E85*D85",
+      "col_j": "=I85*D85",
+      "col_m": "=L85*D85",
+      "col_p": null,
+      "col_q": null,
+      "col_s": null,
+      "col_t": null
+    },
+    "raw_services": [
+      "TRAUMATOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 86,
+    "service": "Traumatología",
+    "mat": 21759,
+    "prof": "Beningazza, Gab.",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=(E86*$D$86)+F83+F84+F85",
+      "col_j": "=(I86*$D$86)+J83+J84+J85",
+      "col_m": "=(L86*$D$86)+M83+M84+M85",
+      "col_p": null,
+      "col_q": "=F86+J86+M86+P86",
+      "col_s": null,
+      "col_t": "=Q86"
+    },
+    "raw_services": [
+      "TRAUMATOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 87,
+    "service": "Traumatología",
+    "mat": 29121,
+    "prof": "Ferreyra, Pablo",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E87*D87",
+      "col_j": "=I87*D87",
+      "col_m": "=L87*D87",
+      "col_p": null,
+      "col_q": "=F87+J87+M87+P87",
+      "col_s": null,
+      "col_t": "=Q87"
+    },
+    "raw_services": [
+      "TRAUMATOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 88,
+    "service": "Traumatología",
+    "mat": 36361,
+    "prof": "Guzman, Nicolas",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E88*D88",
+      "col_j": null,
+      "col_m": "=L88*D88",
+      "col_p": null,
+      "col_q": "=F88+J88+M88+P88",
+      "col_s": null,
+      "col_t": "=Q88"
+    },
+    "raw_services": [
+      "TRAUMATOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 89,
+    "service": "Traumatología",
+    "mat": 42778,
+    "prof": "Cerezo, Emanuel",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E89*D89",
+      "col_j": null,
+      "col_m": "=L89*D89",
+      "col_p": null,
+      "col_q": "=F89+J89+M89+P89",
+      "col_s": null,
+      "col_t": "=Q89"
+    },
+    "raw_services": [
+      "TRAUMATOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 90,
+    "service": "Traumatología",
+    "mat": 32603,
+    "prof": "Villafañe, Gonzalo",
+    "pct_copart": 0.3,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E90*D90",
+      "col_j": null,
+      "col_m": "=L90*D90",
+      "col_p": null,
+      "col_q": "=F90+J90+M90+P90",
+      "col_s": null,
+      "col_t": "=Q90"
+    },
+    "raw_services": [
+      "TRAUMATOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 91,
+    "service": "Traumatología",
+    "mat": 33384,
+    "prof": "Gorgas, Alberto",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E91*D91",
+      "col_j": "=I91*D91",
+      "col_m": "=L91*D91",
+      "col_p": null,
+      "col_q": "=F91+J91+M91+P91",
+      "col_s": null,
+      "col_t": "=Q91"
+    },
+    "raw_services": [
+      "TRAUMATOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 92,
+    "service": "Traumatología",
+    "mat": 32786,
+    "prof": "Ludueña Juan",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E92*D92",
+      "col_j": null,
+      "col_m": "=L92*D92",
+      "col_p": null,
+      "col_q": "=F92+J92+M92+P92",
+      "col_s": null,
+      "col_t": "=Q92"
+    },
+    "raw_services": [
+      "TRAUMATOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 93,
+    "service": "Traumatología",
+    "mat": 39037,
+    "prof": "Jais Jais, Jose",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E93*D93",
+      "col_j": null,
+      "col_m": "=L93*D93",
+      "col_p": null,
+      "col_q": "=F93+J93+M93+P93",
+      "col_s": null,
+      "col_t": "=Q93"
+    },
+    "raw_services": [
+      "TRAUMATOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 94,
+    "service": "7-Traumatología",
+    "mat": 29646,
+    "prof": "Arocena, Mariano",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E94*D94",
+      "col_j": null,
+      "col_m": "=L94*D94",
+      "col_p": null,
+      "col_q": "=F94+J94+M94+P94",
+      "col_s": "=SUM(Q86:Q94)",
+      "col_t": "=Q94"
+    },
+    "raw_services": [
+      "TRAUMATOLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 95,
+    "service": "Urología",
+    "mat": 21947,
+    "prof": "Sonzini Ast., Crist.",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E95*D95",
+      "col_j": "=I95*D95",
+      "col_m": null,
+      "col_p": "=O95*$D95",
+      "col_q": "=F95+J95+M95+P95",
+      "col_s": null,
+      "col_t": "=Q95"
+    },
+    "raw_services": [
+      "UROLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 96,
+    "service": "Urología",
+    "mat": 30989,
+    "prof": "Pinto, Gabriel",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E96*D96",
+      "col_j": null,
+      "col_m": null,
+      "col_p": "=O96*$D96",
+      "col_q": "=F96+J96+M96+P96",
+      "col_s": null,
+      "col_t": "=Q96"
+    },
+    "raw_services": [
+      "UROLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 97,
+    "service": "Urología",
+    "mat": 42606,
+    "prof": "Meicke, Sofia",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E97*D97",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F97+J97+M97+P97",
+      "col_s": null,
+      "col_t": "=Q97"
+    },
+    "raw_services": [
+      "UROLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  },
+  {
+    "row": 98,
+    "service": "17-Urología",
+    "mat": 42674,
+    "prof": "Pastrana Rodrigo",
+    "pct_copart": 0.35,
+    "pct_dist": null,
+    "rule": null,
+    "formulas": {
+      "col_f": "=E98*D98",
+      "col_j": null,
+      "col_m": null,
+      "col_p": null,
+      "col_q": "=F98+J98+M98+P98",
+      "col_s": "=SUM(Q95:Q98)",
+      "col_t": "=Q98"
+    },
+    "raw_services": [
+      "UROLOGIA"
+    ],
+    "exclude_coseguros": false,
+    "exclude_directs": false
+  }
+]
