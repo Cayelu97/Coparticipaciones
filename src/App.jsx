@@ -65,7 +65,9 @@ function App() {
     loadInitialData();
   }, [authLoading, user]);
 
-  const role = !hasSupabase ? 'admin' : (user?.email === 'aye.victoria.lopez2@gmail.com' ? 'admin' : 'reader');
+  const cleanEmail = user?.email?.toLowerCase().trim();
+  const isAdminEmail = cleanEmail === 'aye.victoria.lopez2@gmail.com' || cleanEmail === 'aye.victoria.lopez@gmail.com';
+  const role = !hasSupabase ? 'admin' : (isAdminEmail ? 'admin' : 'reader');
 
   // Restrict reader to dashboard and history
   useEffect(() => {
@@ -213,6 +215,7 @@ function App() {
         setIsCollapsed={setIsCollapsed} 
         role={role}
         hasSupabase={hasSupabase}
+        userEmail={user?.email}
       />
       <main className="main-content">
         {renderActiveView()}

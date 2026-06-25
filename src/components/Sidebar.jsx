@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../services/db';
 
-const Sidebar = ({ activeTab, setActiveTab, isCollapsed, setIsCollapsed, role = 'admin', hasSupabase = false }) => {
+const Sidebar = ({ activeTab, setActiveTab, isCollapsed, setIsCollapsed, role = 'admin', hasSupabase = false, userEmail = '' }) => {
   const allMenuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'processor', label: 'Procesar Archivo', icon: FileSpreadsheet },
@@ -94,8 +94,17 @@ const Sidebar = ({ activeTab, setActiveTab, isCollapsed, setIsCollapsed, role = 
             </a>
           )}
 
+          {hasSupabase && !isCollapsed && userEmail && (
+            <div className="sidebar-user" style={{ padding: '0.5rem 1rem 0.25rem', fontSize: '0.7rem', color: 'var(--text-muted)', borderTop: '1px solid rgba(255,255,255,0.03)', marginTop: '0.25rem' }}>
+              <div>Sesión activa:</div>
+              <div style={{ color: 'var(--text-secondary)', fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={userEmail}>
+                {userEmail}
+              </div>
+            </div>
+          )}
+
           {!isCollapsed && (
-            <div className="sidebar-version" style={{ padding: '0.85rem 1rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+            <div className="sidebar-version" style={{ padding: '0.5rem 1rem 0.85rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
               v1.0.0 ({hasSupabase ? 'Supabase Nube' : 'Local Storage'})
             </div>
           )}
