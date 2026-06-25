@@ -22,13 +22,41 @@ const DEFAULT_SETTINGS = {
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-export const hasSupabase = !!(supabaseUrl && supabaseAnonKey);
-export const supabase = hasSupabase ? createClient(supabaseUrl, supabaseAnonKey) : null;
+// Validar que la URL sea válida y no sea un marcador de posición
+const isValidUrl = (url) => {
+  if (!url) return false;
+  const urlStr = String(url).trim();
+  if (urlStr === '' || urlStr.includes('PLACEHOLDER') || urlStr.includes('YOUR_SUPABASE')) {
+    return false;
+  }
+  try {
+    new URL(urlStr);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+let client = null;
+let active = false;
+
+if (supabaseUrl && supabaseAnonKey && isValidUrl(supabaseUrl)) {
+  try {
+    client = createClient(supabaseUrl, supabaseAnonKey);
+    active = true;
+  } catch (err) {
+    console.error('Error al inicializar el cliente de Supabase:', err);
+    active = false;
+  }
+}
+
+export const hasSupabase = active;
+export const supabase = client;
 
 if (hasSupabase) {
   console.log('⚡ Conectado exitosamente al cliente de Supabase.');
 } else {
-  console.warn('⚠️ Credenciales de Supabase ausentes. Utilizando LocalStorage como base de datos por defecto.');
+  console.warn('⚠️ Credenciales de Supabase ausentes, inválidas o marcadores de posición. Utilizando LocalStorage como base de datos por defecto.');
 }
 
 export const dbService = {
