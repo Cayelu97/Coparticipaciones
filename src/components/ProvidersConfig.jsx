@@ -23,7 +23,14 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
     pct_copart: 0.35,
     pct_dist: '',
     raw_services_str: '',
-    rule: ''
+    rule: '',
+    formula_f: '',
+    formula_j: '',
+    formula_m: '',
+    formula_p: '',
+    formula_q: '',
+    formula_s: '',
+    formula_t: ''
   });
   const [success, setSuccess] = useState('');
 
@@ -32,10 +39,38 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
     new Set(providers.map(p => p.service).filter(Boolean))
   ).sort();
 
+  const handleOpenAddModal = () => {
+    const nextRow = Math.max(...providers.map(p => p.row), 0) + 1;
+    setNewProvider({
+      prof: '',
+      mat: '',
+      service: '',
+      pct_copart: 0.35,
+      pct_dist: '',
+      raw_services_str: '',
+      rule: '',
+      formula_f: `=E${nextRow}*D${nextRow}`,
+      formula_j: `=I${nextRow}*D${nextRow}`,
+      formula_m: `=L${nextRow}*D${nextRow}`,
+      formula_p: `=O${nextRow}*D${nextRow}`,
+      formula_q: `=F${nextRow}+J${nextRow}+M${nextRow}+P${nextRow}`,
+      formula_s: '',
+      formula_t: `=Q${nextRow}`
+    });
+    setIsAddModalOpen(true);
+  };
+
   const handleEditClick = (p) => {
     setEditingProvider({
       ...p,
-      raw_services_str: p.raw_services ? p.raw_services.join(', ') : ''
+      raw_services_str: p.raw_services ? p.raw_services.join(', ') : '',
+      formula_f: p.formulas?.col_f || '',
+      formula_j: p.formulas?.col_j || '',
+      formula_m: p.formulas?.col_m || '',
+      formula_p: p.formulas?.col_p || '',
+      formula_q: p.formulas?.col_q || '',
+      formula_s: p.formulas?.col_s || '',
+      formula_t: p.formulas?.col_t || ''
     });
   };
 
@@ -52,12 +87,21 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
         return {
           ...p,
           prof: editingProvider.prof,
-          mat: editingProvider.mat ? parseFloat(editingProvider.mat) : null,
+          mat: editingProvider.mat ? (isNaN(Number(editingProvider.mat)) ? editingProvider.mat : Number(editingProvider.mat)) : null,
           service: editingProvider.service,
-          pct_copart: parseFloat(editingProvider.pct_copart) || null,
-          pct_dist: editingProvider.pct_dist ? parseFloat(editingProvider.pct_dist) : null,
+          pct_copart: editingProvider.pct_copart !== '' ? parseFloat(editingProvider.pct_copart) : null,
+          pct_dist: editingProvider.pct_dist !== '' ? parseFloat(editingProvider.pct_dist) : null,
           raw_services: rawServicesArr,
-          rule: editingProvider.rule || null
+          rule: editingProvider.rule || null,
+          formulas: {
+            col_f: editingProvider.formula_f ? editingProvider.formula_f.trim() : null,
+            col_j: editingProvider.formula_j ? editingProvider.formula_j.trim() : null,
+            col_m: editingProvider.formula_m ? editingProvider.formula_m.trim() : null,
+            col_p: editingProvider.formula_p ? editingProvider.formula_p.trim() : null,
+            col_q: editingProvider.formula_q ? editingProvider.formula_q.trim() : null,
+            col_s: editingProvider.formula_s ? editingProvider.formula_s.trim() : null,
+            col_t: editingProvider.formula_t ? editingProvider.formula_t.trim() : null
+          }
         };
       }
       return p;
@@ -80,20 +124,20 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
     const providerToAdd = {
       row: nextRow,
       prof: newProvider.prof,
-      mat: newProvider.mat ? parseFloat(newProvider.mat) : null,
+      mat: newProvider.mat ? (isNaN(Number(newProvider.mat)) ? newProvider.mat : Number(newProvider.mat)) : null,
       service: newProvider.service,
-      pct_copart: parseFloat(newProvider.pct_copart) || null,
-      pct_dist: newProvider.pct_dist ? parseFloat(newProvider.pct_dist) : null,
+      pct_copart: newProvider.pct_copart !== '' ? parseFloat(newProvider.pct_copart) : null,
+      pct_dist: newProvider.pct_dist !== '' ? parseFloat(newProvider.pct_dist) : null,
       raw_services: rawServicesArr,
       rule: newProvider.rule || null,
       formulas: {
-        col_f: '=E' + nextRow + '*D' + nextRow,
-        col_j: '=I' + nextRow + '*D' + nextRow,
-        col_m: '=L' + nextRow + '*D' + nextRow,
-        col_p: '=O' + nextRow + '*D' + nextRow,
-        col_q: '=F' + nextRow + '+J' + nextRow + '+M' + nextRow + '+P' + nextRow,
-        col_s: null,
-        col_t: '=Q' + nextRow
+        col_f: newProvider.formula_f ? newProvider.formula_f.trim() : null,
+        col_j: newProvider.formula_j ? newProvider.formula_j.trim() : null,
+        col_m: newProvider.formula_m ? newProvider.formula_m.trim() : null,
+        col_p: newProvider.formula_p ? newProvider.formula_p.trim() : null,
+        col_q: newProvider.formula_q ? newProvider.formula_q.trim() : null,
+        col_s: newProvider.formula_s ? newProvider.formula_s.trim() : null,
+        col_t: newProvider.formula_t ? newProvider.formula_t.trim() : null
       }
     };
 
@@ -101,15 +145,6 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
     await dbService.saveProviders(updated);
     onUpdateProviders(updated);
     setIsAddModalOpen(false);
-    setNewProvider({
-      prof: '',
-      mat: '',
-      service: '',
-      pct_copart: 0.35,
-      pct_dist: '',
-      raw_services_str: '',
-      rule: ''
-    });
     showSuccess('Nuevo profesional agregado con éxito.');
   };
 
@@ -161,7 +196,7 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
             <Undo2 size={16} />
             Restablecer Valores Iniciales
           </button>
-          <button className="btn btn-primary" onClick={() => setIsAddModalOpen(true)}>
+          <button className="btn btn-primary" onClick={handleOpenAddModal}>
             <Plus size={16} />
             Agregar Prestador
           </button>
@@ -205,7 +240,7 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                 <th>Fila</th>
                 <th>Especialidad / Servicio</th>
                 <th>Matrícula</th>
-                <th>Profesional</th>
+                <th>Profesional y Fórmulas Excel</th>
                 <th>% Copart.</th>
                 <th>% Dist. Grupo</th>
                 <th>Regla Especial</th>
@@ -219,7 +254,20 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                   <td style={{ color: 'var(--text-muted)' }}>{p.row}</td>
                   <td style={{ fontWeight: '500' }}>{p.service}</td>
                   <td>{p.mat || '-'}</td>
-                  <td>{p.prof}</td>
+                  <td>
+                    <div style={{ fontWeight: '600', color: 'var(--text-primary)' }}>{p.prof}</div>
+                    {p.formulas && (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '0.25rem', fontFamily: 'monospace' }}>
+                        {p.formulas.col_f && <span style={{ background: 'rgba(255,255,255,0.03)', padding: '0.05rem 0.2rem', borderRadius: '4px' }}>F: {p.formulas.col_f}</span>}
+                        {p.formulas.col_j && <span style={{ background: 'rgba(255,255,255,0.03)', padding: '0.05rem 0.2rem', borderRadius: '4px' }}>J: {p.formulas.col_j}</span>}
+                        {p.formulas.col_m && <span style={{ background: 'rgba(255,255,255,0.03)', padding: '0.05rem 0.2rem', borderRadius: '4px' }}>M: {p.formulas.col_m}</span>}
+                        {p.formulas.col_p && <span style={{ background: 'rgba(255,255,255,0.03)', padding: '0.05rem 0.2rem', borderRadius: '4px' }}>P: {p.formulas.col_p}</span>}
+                        {p.formulas.col_q && <span style={{ background: 'rgba(139,92,246,0.08)', padding: '0.05rem 0.2rem', borderRadius: '4px', color: '#a78bfa' }}>Q: {p.formulas.col_q}</span>}
+                        {p.formulas.col_s && <span style={{ background: 'rgba(6,182,212,0.08)', padding: '0.05rem 0.2rem', borderRadius: '4px', color: '#22d3ee' }}>S: {p.formulas.col_s}</span>}
+                        {p.formulas.col_t && <span style={{ background: 'rgba(16,185,129,0.08)', padding: '0.05rem 0.2rem', borderRadius: '4px', color: '#34d399', fontWeight: '500' }}>T: {p.formulas.col_t}</span>}
+                      </div>
+                    )}
+                  </td>
                   <td>{p.pct_copart ? `${(p.pct_copart * 100).toFixed(0)}%` : '-'}</td>
                   <td>{p.pct_dist ? `${(p.pct_dist * 100).toFixed(0)}%` : '-'}</td>
                   <td>
@@ -229,7 +277,7 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                       <span style={{ color: 'var(--text-muted)' }}>Ninguna</span>
                     )}
                   </td>
-                  <td style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', maxWidth: '280px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <td style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {p.raw_services && p.raw_services.length > 0 ? p.raw_services.join(', ') : 'Todos'}
                   </td>
                   <td style={{ textAlign: 'right' }}>
@@ -252,12 +300,12 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
       {/* Add Modal */}
       {isAddModalOpen && (
         <div className="modal-overlay">
-          <div className="modal-content">
+          <div className="modal-content" style={{ maxWidth: '600px' }}>
             <div className="modal-header">
               <h3>Agregar Nuevo Prestador</h3>
               <a onClick={() => setIsAddModalOpen(false)} style={{ cursor: 'pointer' }}><X size={20} /></a>
             </div>
-            <div className="modal-body">
+            <div className="modal-body" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
               <div className="input-group">
                 <label>Nombre del Profesional</label>
                 <input 
@@ -272,10 +320,10 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                 <div className="input-group">
                   <label>Matrícula</label>
                   <input 
-                    type="number" 
+                    type="text" 
                     value={newProvider.mat} 
                     onChange={(e) => setNewProvider({...newProvider, mat: e.target.value})}
-                    placeholder="Ej: 34522"
+                    placeholder="Ej: 34522 o SERV."
                   />
                 </div>
 
@@ -335,6 +383,86 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                   placeholder="Ej: CARDIOLOGIA, ECO DOPPLER (Dejar vacío para incluir todos)"
                 />
               </div>
+
+              {/* Fórmulas de Excel */}
+              <h4 style={{ color: 'var(--primary)', marginTop: '1.5rem', marginBottom: '0.5rem', fontSize: '0.9rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.4rem' }}>
+                Fórmulas de Liquidación (Excel)
+              </h4>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+                Configura las fórmulas que se exportarán en el Excel. Se autocompletan para la siguiente fila disponible por defecto.
+              </p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '0.75rem' }}>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Fórmula Coseguro (Col F)</label>
+                  <input 
+                    type="text" 
+                    value={newProvider.formula_f} 
+                    onChange={(e) => setNewProvider({...newProvider, formula_f: e.target.value})}
+                    placeholder="Ej: =E6*D6"
+                  />
+                </div>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Fórmula APROSS (Col J)</label>
+                  <input 
+                    type="text" 
+                    value={newProvider.formula_j} 
+                    onChange={(e) => setNewProvider({...newProvider, formula_j: e.target.value})}
+                    placeholder="Ej: =I6*D6"
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '0.75rem' }}>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Fórmula Horizonte (Col M)</label>
+                  <input 
+                    type="text" 
+                    value={newProvider.formula_m} 
+                    onChange={(e) => setNewProvider({...newProvider, formula_m: e.target.value})}
+                    placeholder="Ej: =L6*D6"
+                  />
+                </div>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Fórmula Red / ART (Col P)</label>
+                  <input 
+                    type="text" 
+                    value={newProvider.formula_p} 
+                    onChange={(e) => setNewProvider({...newProvider, formula_p: e.target.value})}
+                    placeholder="Ej: =O6*D6"
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Fórmula Subtotal (Col Q)</label>
+                  <input 
+                    type="text" 
+                    value={newProvider.formula_q} 
+                    onChange={(e) => setNewProvider({...newProvider, formula_q: e.target.value})}
+                    placeholder="Ej: =F6+J6+M6+P6"
+                  />
+                </div>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Fórmula Especial (Col S)</label>
+                  <input 
+                    type="text" 
+                    value={newProvider.formula_s} 
+                    onChange={(e) => setNewProvider({...newProvider, formula_s: e.target.value})}
+                    placeholder="Vacío si no aplica"
+                  />
+                </div>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Fórmula Pago (Col T)</label>
+                  <input 
+                    type="text" 
+                    value={newProvider.formula_t} 
+                    onChange={(e) => setNewProvider({...newProvider, formula_t: e.target.value})}
+                    placeholder="Ej: =Q6"
+                  />
+                </div>
+              </div>
             </div>
             <div className="modal-footer">
               <button className="btn btn-secondary" onClick={() => setIsAddModalOpen(false)}>Cancelar</button>
@@ -350,12 +478,12 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
       {/* Edit Modal */}
       {editingProvider && (
         <div className="modal-overlay">
-          <div className="modal-content">
+          <div className="modal-content" style={{ maxWidth: '600px' }}>
             <div className="modal-header">
               <h3>Editar Prestador (Fila {editingProvider.row})</h3>
               <a onClick={() => setEditingProvider(null)} style={{ cursor: 'pointer' }}><X size={20} /></a>
             </div>
-            <div className="modal-body">
+            <div className="modal-body" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
               <div className="input-group">
                 <label>Nombre del Profesional</label>
                 <input 
@@ -369,9 +497,10 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                 <div className="input-group">
                   <label>Matrícula</label>
                   <input 
-                    type="number" 
+                    type="text" 
                     value={editingProvider.mat || ''} 
                     onChange={(e) => setEditingProvider({...editingProvider, mat: e.target.value})}
+                    placeholder="Ej: 34522 o SERV."
                   />
                 </div>
 
@@ -426,6 +555,86 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                   value={editingProvider.raw_services_str} 
                   onChange={(e) => setEditingProvider({...editingProvider, raw_services_str: e.target.value})}
                 />
+              </div>
+
+              {/* Fórmulas de Excel */}
+              <h4 style={{ color: 'var(--primary)', marginTop: '1.5rem', marginBottom: '0.5rem', fontSize: '0.9rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.4rem' }}>
+                Fórmulas de Liquidación (Excel)
+              </h4>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+                Modifica las fórmulas de Excel asignadas a este profesional. Usa la fila <strong>{editingProvider.row}</strong> para las referencias de celda.
+              </p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '0.75rem' }}>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Fórmula Coseguro (Col F)</label>
+                  <input 
+                    type="text" 
+                    value={editingProvider.formula_f} 
+                    onChange={(e) => setEditingProvider({...editingProvider, formula_f: e.target.value})}
+                    placeholder="Ej: =E6*D6"
+                  />
+                </div>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Fórmula APROSS (Col J)</label>
+                  <input 
+                    type="text" 
+                    value={editingProvider.formula_j} 
+                    onChange={(e) => setEditingProvider({...editingProvider, formula_j: e.target.value})}
+                    placeholder="Ej: =I6*D6"
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '0.75rem' }}>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Fórmula Horizonte (Col M)</label>
+                  <input 
+                    type="text" 
+                    value={editingProvider.formula_m} 
+                    onChange={(e) => setEditingProvider({...editingProvider, formula_m: e.target.value})}
+                    placeholder="Ej: =L6*D6"
+                  />
+                </div>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Fórmula Red / ART (Col P)</label>
+                  <input 
+                    type="text" 
+                    value={editingProvider.formula_p} 
+                    onChange={(e) => setEditingProvider({...editingProvider, formula_p: e.target.value})}
+                    placeholder="Ej: =O6*D6"
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Fórmula Subtotal (Col Q)</label>
+                  <input 
+                    type="text" 
+                    value={editingProvider.formula_q} 
+                    onChange={(e) => setEditingProvider({...editingProvider, formula_q: e.target.value})}
+                    placeholder="Ej: =F6+J6+M6+P6"
+                  />
+                </div>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Fórmula Especial (Col S)</label>
+                  <input 
+                    type="text" 
+                    value={editingProvider.formula_s} 
+                    onChange={(e) => setEditingProvider({...editingProvider, formula_s: e.target.value})}
+                    placeholder="Vacío si no aplica"
+                  />
+                </div>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Fórmula Pago (Col T)</label>
+                  <input 
+                    type="text" 
+                    value={editingProvider.formula_t} 
+                    onChange={(e) => setEditingProvider({...editingProvider, formula_t: e.target.value})}
+                    placeholder="Ej: =Q6"
+                  />
+                </div>
               </div>
             </div>
             <div className="modal-footer">
