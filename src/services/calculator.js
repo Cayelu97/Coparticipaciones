@@ -247,10 +247,14 @@ const evaluatePagoFinal = (p, results) => {
  * @returns {Object} Resultados calculados fila por fila y totales generales
  */
 const evaluateAprossVal = (p, results, tariffs) => {
+  const aprossTariff = (p.formulas?.tariff_apross !== undefined && p.formulas?.tariff_apross !== null && p.formulas?.tariff_apross !== '')
+    ? parseNum(p.formulas.tariff_apross)
+    : tariffs.apross;
+
   const formula = p.formulas ? p.formulas.col_h : null;
   if (formula === null) return 0;
   if (formula === undefined) {
-    return p.col_g * tariffs.apross;
+    return p.col_g * aprossTariff;
   }
   if (!formula.startsWith('=')) return parseNum(formula);
 
@@ -260,10 +264,10 @@ const evaluateAprossVal = (p, results, tariffs) => {
     const rowNum = parseInt(match[1]);
     const r = results.find(row => row.row === rowNum);
     const count = r ? (r.col_g || 0) : 0;
-    return count * tariffs.apross;
+    return count * aprossTariff;
   }
 
-  return p.col_g * tariffs.apross;
+  return p.col_g * aprossTariff;
 };
 
 const evaluateApross96 = (p, results, multipliers) => {
@@ -287,10 +291,14 @@ const evaluateApross96 = (p, results, multipliers) => {
 };
 
 const evaluateHorizVal = (p, results, tariffs) => {
+  const horizTariff = (p.formulas?.tariff_horizonte !== undefined && p.formulas?.tariff_horizonte !== null && p.formulas?.tariff_horizonte !== '')
+    ? parseNum(p.formulas.tariff_horizonte)
+    : tariffs.horizonte;
+
   const formula = p.formulas ? p.formulas.col_l : null;
   if (formula === null) return 0;
   if (formula === undefined) {
-    return p.col_k * tariffs.horizonte;
+    return p.col_k * horizTariff;
   }
   if (!formula.startsWith('=')) return parseNum(formula);
 
@@ -300,17 +308,21 @@ const evaluateHorizVal = (p, results, tariffs) => {
     const rowNum = parseInt(match[1]);
     const r = results.find(row => row.row === rowNum);
     const count = r ? (r.col_k || 0) : 0;
-    return count * tariffs.horizonte;
+    return count * horizTariff;
   }
 
-  return p.col_k * tariffs.horizonte;
+  return p.col_k * horizTariff;
 };
 
 const evaluateRedVal = (p, results, tariffs) => {
+  const redTariff = (p.formulas?.tariff_red !== undefined && p.formulas?.tariff_red !== null && p.formulas?.tariff_red !== '')
+    ? parseNum(p.formulas.tariff_red)
+    : tariffs.redPrestacional;
+
   const formula = p.formulas ? p.formulas.col_o : null;
   if (formula === null) return 0;
   if (formula === undefined) {
-    return p.col_n * tariffs.redPrestacional;
+    return p.col_n * redTariff;
   }
   if (!formula.startsWith('=')) return parseNum(formula);
 
@@ -320,10 +332,10 @@ const evaluateRedVal = (p, results, tariffs) => {
     const rowNum = parseInt(match[1]);
     const r = results.find(row => row.row === rowNum);
     const count = r ? (r.col_n || 0) : 0;
-    return count * tariffs.redPrestacional;
+    return count * redTariff;
   }
 
-  return p.col_n * tariffs.redPrestacional;
+  return p.col_n * redTariff;
 };
 
 /**

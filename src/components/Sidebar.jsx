@@ -16,7 +16,6 @@ const Sidebar = ({ activeTab, setActiveTab, isCollapsed, setIsCollapsed, role = 
   const allMenuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'processor', label: 'Procesar Archivo', icon: FileSpreadsheet },
-    { id: 'providers', label: 'Prestadores', icon: Users },
     { id: 'history', label: 'Historial', icon: History },
   ];
 

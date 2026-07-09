@@ -65,9 +65,21 @@ function App() {
     loadInitialData();
   }, [authLoading, user]);
 
+  const [userRoles, setUserRoles] = useState([]);
+
+  useEffect(() => {
+    if (settings && settings.multipliers) {
+      setUserRoles(settings.multipliers.user_roles || [
+        { email: 'aye.victoria.lopez2@gmail.com', role: 'admin' },
+        { email: 'aye.victoria.lopez@gmail.com', role: 'admin' }
+      ]);
+    }
+  }, [settings]);
+
   const cleanEmail = user?.email?.toLowerCase().trim();
+  const matchedUser = userRoles.find(u => u.email?.toLowerCase().trim() === cleanEmail);
   const isAdminEmail = cleanEmail === 'aye.victoria.lopez2@gmail.com' || cleanEmail === 'aye.victoria.lopez@gmail.com';
-  const role = !hasSupabase ? 'admin' : (isAdminEmail ? 'admin' : 'reader');
+  const role = !hasSupabase ? 'admin' : ((matchedUser?.role === 'admin' || isAdminEmail) ? 'admin' : 'reader');
 
   // Restrict reader to dashboard and history
   useEffect(() => {
@@ -129,14 +141,6 @@ function App() {
           />
         );
       
-      case 'providers':
-        return (
-          <ProvidersConfig 
-            providers={providers} 
-            onUpdateProviders={handleUpdateProviders}
-          />
-        );
-      
       case 'history':
         return (
           <HistoryList 
@@ -152,6 +156,8 @@ function App() {
           <SettingsConfig 
             settings={settings} 
             onUpdateSettings={handleUpdateSettings}
+            providers={providers}
+            onUpdateProviders={handleUpdateProviders}
           />
         );
 

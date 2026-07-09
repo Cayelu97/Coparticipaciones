@@ -11,6 +11,13 @@ import {
 } from 'lucide-react';
 import { dbService } from '../services/db';
 
+const parseNum = (val) => {
+  if (val === null || val === undefined) return 0;
+  if (typeof val === 'number') return val;
+  const num = parseFloat(val);
+  return isNaN(num) ? 0 : num;
+};
+
 // Helper to translate Excel formulas into descriptive business names
 const translateExcelFormula = (formulaStr, rowNum) => {
   if (!formulaStr) return '';
@@ -64,124 +71,172 @@ const translateExcelFormula = (formulaStr, rowNum) => {
   return translated;
 };
 
-// Componente interactivo para crear o editar fórmulas con ayuda visual
-const FormulaInput = ({ label, value, onChange, placeholder, row }) => {
-  const [showHelper, setShowHelper] = useState(false);
+// Helper to convert friendly tags back into Excel formulas
+const translateFriendlyToExcel = (friendlyStr, rowNum) => {
+  if (!friendlyStr) return null;
+  let excel = friendlyStr.trim();
 
+  const columnsMap = {
+    'Tot. Valorizado': 'E',
+    '% Copart.': 'D',
+    'Coseguros': 'F',
+    'APROSS Cant.': 'G',
+    'APROSS Valor': 'I',
+    'APROSS Copart.': 'J',
+    'Horizonte Cant.': 'K',
+    'Horizonte Valor': 'L',
+    'Horizonte Copart.': 'M',
+    'Red Cant.': 'N',
+    'Red Valor': 'O',
+    'Red Copart.': 'P',
+    'Subtotal Copart': 'Q',
+    'Subtotal Especial': 'S',
+    'Pago Final': 'T'
+  };
+
+  const absoluteMap = {
+    'Tarifa APROSS': '$H$3',
+    'Multiplicador APROSS': '$J$3',
+    'Tarifa Horizonte': '$K$3',
+    'Tarifa Red': '$N$3'
+  };
+
+  // Replace absolute cells
+  Object.entries(absoluteMap).forEach(([friendlyName, code]) => {
+    const regex = new RegExp(`\\[${friendlyName}\\]`, 'gi');
+    excel = excel.replace(regex, code);
+  });
+
+  // Replace variables like [Tot. Valorizado] (Fila 57) -> E57
+  // Or [Tot. Valorizado] -> E[rowNum]
+  const variableRegex = /\[([^\]]+)\](?:\s*\(Fila\s*(\d+)\))?/gi;
+  excel = excel.replace(variableRegex, (match, varName, fileNum) => {
+    const cleanVarName = varName.trim();
+    const colCode = columnsMap[cleanVarName] || cleanVarName;
+    const row = fileNum ? fileNum : rowNum;
+    return colCode + row;
+  });
+
+  // Check if it's a numeric constant or formula
+  if (excel !== '' && !excel.startsWith('=')) {
+    // If it is just a number, don't prepend =
+    if (isNaN(Number(excel))) {
+      excel = '=' + excel;
+    }
+  }
+
+  return excel;
+};
+
+// Componente interactivo para crear o editar fórmulas con ayuda visual simple
+const FormulaInput = ({ label, value, onChange, placeholder }) => {
   const insertVariable = (token) => {
     onChange(value + token);
   };
 
-  const columns = [
-    { label: 'Tot. Valorizado', code: `E${row}` },
-    { label: '% Copart.', code: `D${row}` },
-    { label: 'Coseguros', code: `F${row}` },
-    { label: 'APROSS Cant.', code: `G${row}` },
-    { label: 'APROSS Valor', code: `I${row}` },
-    { label: 'APROSS Cop.', code: `J${row}` },
-    { label: 'Horiz. Cant.', code: `K${row}` },
-    { label: 'Horiz. Valor', code: `L${row}` },
-    { label: 'Horiz. Cop.', code: `M${row}` },
-    { label: 'Red Cant.', code: `N${row}` },
-    { label: 'Red Valor', code: `O${row}` },
-    { label: 'Red Cop.', code: `P${row}` },
-    { label: 'Subtotal Cop.', code: `Q${row}` },
-    { label: 'Pago Final', code: `T${row}` },
-    { label: 'Tarifa APROSS', code: '$H$3' },
-    { label: 'Tarifa Horizonte', code: '$K$3' },
-    { label: 'Tarifa Red', code: '$N$3' }
+  const commonChips = [
+    { label: '[Tot. Valorizado]', code: '[Tot. Valorizado]' },
+    { label: '[% Copart.]', code: '[% Copart.]' },
+    { label: '[Coseguros]', code: '[Coseguros]' },
+    { label: '[Subtotal Copart]', code: '[Subtotal Copart]' },
+    { label: '[Pago Final]', code: '[Pago Final]' }
   ];
 
-  const operators = ['+', '-', '*', '/', '(', ')'];
+  const mathOps = ['+', '-', '*', '/'];
 
-  const translation = translateExcelFormula(value, row);
+  const otherVariables = [
+    { label: 'APROSS Cant.', code: '[APROSS Cant.]' },
+    { label: 'APROSS Valor', code: '[APROSS Valor]' },
+    { label: 'APROSS Copart.', code: '[APROSS Copart.]' },
+    { label: 'Horizonte Cant.', code: '[Horizonte Cant.]' },
+    { label: 'Horizonte Valor', code: '[Horizonte Valor]' },
+    { label: 'Horizonte Copart.', code: '[Horizonte Copart.]' },
+    { label: 'Red Cant.', code: '[Red Cant.]' },
+    { label: 'Red Valor', code: '[Red Valor]' },
+    { label: 'Red Copart.', code: '[Red Copart.]' },
+    { label: 'Subtotal Especial', code: '[Subtotal Especial]' },
+    { label: 'Tarifa APROSS', code: '[Tarifa APROSS]' },
+    { label: 'Tarifa Horizonte', code: '[Tarifa Horizonte]' },
+    { label: 'Tarifa Red', code: '[Tarifa Red]' }
+  ];
 
   return (
     <div className="input-group" style={{ marginBottom: '1.25rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <label style={{ fontSize: '0.85rem', fontWeight: '600' }}>{label}</label>
-        <button 
-          type="button" 
-          onClick={() => setShowHelper(!showHelper)}
-          style={{
-            fontSize: '0.75rem',
-            background: 'none',
-            border: 'none',
-            color: 'var(--primary)',
-            cursor: 'pointer',
-            padding: 0,
-            textDecoration: 'underline'
-          }}
-        >
-          {showHelper ? 'Ocultar Asistente' : 'Mostrar Asistente de Fórmulas'}
-        </button>
-      </div>
-
+      <label style={{ fontSize: '0.85rem', fontWeight: '600' }}>{label}</label>
       <input 
         type="text" 
         value={value} 
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        style={{ fontFamily: 'monospace', letterSpacing: '0.5px' }}
+        style={{ letterSpacing: '0.5px' }}
       />
+      
+      {/* Helper inline chips */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', marginTop: '0.35rem', alignItems: 'center' }}>
+        {mathOps.map(op => (
+          <button
+            key={op}
+            type="button"
+            onClick={() => insertVariable(` ${op} `)}
+            style={{
+              padding: '0.15rem 0.35rem',
+              fontSize: '0.7rem',
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid var(--border-light)',
+              borderRadius: '4px',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer'
+            }}
+          >
+            {op}
+          </button>
+        ))}
+        {commonChips.map(chip => (
+          <button
+            key={chip.label}
+            type="button"
+            onClick={() => insertVariable(chip.code)}
+            style={{
+              padding: '0.15rem 0.35rem',
+              fontSize: '0.7rem',
+              background: 'rgba(139,92,246,0.05)',
+              border: '1px solid rgba(139,92,246,0.2)',
+              borderRadius: '4px',
+              color: 'var(--primary-light)',
+              cursor: 'pointer'
+            }}
+          >
+            {chip.label}
+          </button>
+        ))}
 
-      {translation && (
-        <div style={{ 
-          fontSize: '0.75rem', 
-          color: 'var(--success)', 
-          marginTop: '0.25rem', 
-          background: 'rgba(16,185,129,0.04)', 
-          padding: '0.35rem 0.5rem', 
-          borderRadius: '4px',
-          borderLeft: '2px solid var(--success)',
-          fontStyle: 'italic'
-        }}>
-          <strong>Equivale a:</strong> {translation}
-        </div>
-      )}
-
-      {showHelper && (
-        <div style={{ 
-          marginTop: '0.5rem', 
-          padding: '0.75rem', 
-          background: 'rgba(255,255,255,0.02)', 
-          border: '1px solid var(--border-light)', 
-          borderRadius: '6px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.5rem'
-        }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem' }}>
-            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block', width: '100%' }}>Operadores:</span>
-            {operators.map(op => (
-              <button
-                key={op}
-                type="button"
-                onClick={() => insertVariable(op)}
-                className="btn btn-secondary"
-                style={{ padding: '0.15rem 0.4rem', fontSize: '0.75rem' }}
-              >
-                {op}
-              </button>
-            ))}
-          </div>
-
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem' }}>
-            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block', width: '100%' }}>Variables de Fila (Fila {row}):</span>
-            {columns.map(col => (
-              <button
-                key={col.label}
-                type="button"
-                onClick={() => insertVariable(col.code)}
-                className="btn btn-secondary"
-                style={{ padding: '0.15rem 0.4rem', fontSize: '0.75rem', border: '1px solid rgba(139,92,246,0.15)', textTransform: 'none' }}
-              >
-                {col.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+        <select
+          onChange={(e) => {
+            if (e.target.value) {
+              insertVariable(e.target.value);
+              e.target.value = ''; // Reset
+            }
+          }}
+          style={{
+            padding: '0.15rem 0.35rem',
+            fontSize: '0.7rem',
+            background: 'rgba(255,255,255,0.03)',
+            border: '1px solid var(--border-light)',
+            borderRadius: '4px',
+            color: 'var(--text-muted)',
+            cursor: 'pointer',
+            width: 'auto',
+            height: 'auto',
+            borderStyle: 'dashed'
+          }}
+          defaultValue=""
+        >
+          <option value="" disabled>+ Más variables...</option>
+          {otherVariables.map(v => (
+            <option key={v.code} value={v.code}>{v.label}</option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 };
@@ -205,7 +260,10 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
     formula_p: '',
     formula_q: '',
     formula_s: '',
-    formula_t: ''
+    formula_t: '',
+    tariff_apross: '',
+    tariff_horizonte: '',
+    tariff_red: ''
   });
   const [success, setSuccess] = useState('');
 
@@ -215,7 +273,6 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
   ).sort();
 
   const handleOpenAddModal = () => {
-    const nextRow = Math.max(...providers.map(p => p.row), 0) + 1;
     setNewProvider({
       prof: '',
       mat: '',
@@ -224,13 +281,16 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
       pct_dist: '',
       raw_services_str: '',
       rule: '',
-      formula_f: `=E${nextRow}*D${nextRow}`,
-      formula_j: `=I${nextRow}*D${nextRow}`,
-      formula_m: `=L${nextRow}*D${nextRow}`,
-      formula_p: `=O${nextRow}*D${nextRow}`,
-      formula_q: `=F${nextRow}+J${nextRow}+M${nextRow}+P${nextRow}`,
+      formula_f: '[Tot. Valorizado] * [% Copart.]',
+      formula_j: '[APROSS Valor] * [% Copart.]',
+      formula_m: '[Horizonte Valor] * [% Copart.]',
+      formula_p: '[Red Valor] * [% Copart.]',
+      formula_q: '[Coseguros] + [APROSS Copart.] + [Horizonte Copart.] + [Red Copart.]',
       formula_s: '',
-      formula_t: `=Q${nextRow}`
+      formula_t: '[Subtotal Copart]',
+      tariff_apross: '',
+      tariff_horizonte: '',
+      tariff_red: ''
     });
     setIsAddModalOpen(true);
   };
@@ -239,13 +299,16 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
     setEditingProvider({
       ...p,
       raw_services_str: p.raw_services ? p.raw_services.join(', ') : '',
-      formula_f: p.formulas?.col_f || '',
-      formula_j: p.formulas?.col_j || '',
-      formula_m: p.formulas?.col_m || '',
-      formula_p: p.formulas?.col_p || '',
-      formula_q: p.formulas?.col_q || '',
-      formula_s: p.formulas?.col_s || '',
-      formula_t: p.formulas?.col_t || ''
+      formula_f: p.formulas?.col_f ? translateExcelFormula(p.formulas.col_f, p.row) : '',
+      formula_j: p.formulas?.col_j ? translateExcelFormula(p.formulas.col_j, p.row) : '',
+      formula_m: p.formulas?.col_m ? translateExcelFormula(p.formulas.col_m, p.row) : '',
+      formula_p: p.formulas?.col_p ? translateExcelFormula(p.formulas.col_p, p.row) : '',
+      formula_q: p.formulas?.col_q ? translateExcelFormula(p.formulas.col_q, p.row) : '',
+      formula_s: p.formulas?.col_s ? translateExcelFormula(p.formulas.col_s, p.row) : '',
+      formula_t: p.formulas?.col_t ? translateExcelFormula(p.formulas.col_t, p.row) : '',
+      tariff_apross: p.formulas?.tariff_apross || '',
+      tariff_horizonte: p.formulas?.tariff_horizonte || '',
+      tariff_red: p.formulas?.tariff_red || ''
     });
   };
 
@@ -269,13 +332,16 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
           raw_services: rawServicesArr,
           rule: editingProvider.rule || null,
           formulas: {
-            col_f: editingProvider.formula_f ? editingProvider.formula_f.trim() : null,
-            col_j: editingProvider.formula_j ? editingProvider.formula_j.trim() : null,
-            col_m: editingProvider.formula_m ? editingProvider.formula_m.trim() : null,
-            col_p: editingProvider.formula_p ? editingProvider.formula_p.trim() : null,
-            col_q: editingProvider.formula_q ? editingProvider.formula_q.trim() : null,
-            col_s: editingProvider.formula_s ? editingProvider.formula_s.trim() : null,
-            col_t: editingProvider.formula_t ? editingProvider.formula_t.trim() : null
+            col_f: editingProvider.formula_f ? translateFriendlyToExcel(editingProvider.formula_f, p.row) : null,
+            col_j: editingProvider.formula_j ? translateFriendlyToExcel(editingProvider.formula_j, p.row) : null,
+            col_m: editingProvider.formula_m ? translateFriendlyToExcel(editingProvider.formula_m, p.row) : null,
+            col_p: editingProvider.formula_p ? translateFriendlyToExcel(editingProvider.formula_p, p.row) : null,
+            col_q: editingProvider.formula_q ? translateFriendlyToExcel(editingProvider.formula_q, p.row) : null,
+            col_s: editingProvider.formula_s ? translateFriendlyToExcel(editingProvider.formula_s, p.row) : null,
+            col_t: editingProvider.formula_t ? translateFriendlyToExcel(editingProvider.formula_t, p.row) : null,
+            tariff_apross: editingProvider.tariff_apross !== '' ? parseFloat(editingProvider.tariff_apross) : null,
+            tariff_horizonte: editingProvider.tariff_horizonte !== '' ? parseFloat(editingProvider.tariff_horizonte) : null,
+            tariff_red: editingProvider.tariff_red !== '' ? parseFloat(editingProvider.tariff_red) : null
           }
         };
       }
@@ -306,13 +372,16 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
       raw_services: rawServicesArr,
       rule: newProvider.rule || null,
       formulas: {
-        col_f: newProvider.formula_f ? newProvider.formula_f.trim() : null,
-        col_j: newProvider.formula_j ? newProvider.formula_j.trim() : null,
-        col_m: newProvider.formula_m ? newProvider.formula_m.trim() : null,
-        col_p: newProvider.formula_p ? newProvider.formula_p.trim() : null,
-        col_q: newProvider.formula_q ? newProvider.formula_q.trim() : null,
-        col_s: newProvider.formula_s ? newProvider.formula_s.trim() : null,
-        col_t: newProvider.formula_t ? newProvider.formula_t.trim() : null
+        col_f: newProvider.formula_f ? translateFriendlyToExcel(newProvider.formula_f, nextRow) : null,
+        col_j: newProvider.formula_j ? translateFriendlyToExcel(newProvider.formula_j, nextRow) : null,
+        col_m: newProvider.formula_m ? translateFriendlyToExcel(newProvider.formula_m, nextRow) : null,
+        col_p: newProvider.formula_p ? translateFriendlyToExcel(newProvider.formula_p, nextRow) : null,
+        col_q: newProvider.formula_q ? translateFriendlyToExcel(newProvider.formula_q, nextRow) : null,
+        col_s: newProvider.formula_s ? translateFriendlyToExcel(newProvider.formula_s, nextRow) : null,
+        col_t: newProvider.formula_t ? translateFriendlyToExcel(newProvider.formula_t, nextRow) : null,
+        tariff_apross: newProvider.tariff_apross !== '' ? parseFloat(newProvider.tariff_apross) : null,
+        tariff_horizonte: newProvider.tariff_horizonte !== '' ? parseFloat(newProvider.tariff_horizonte) : null,
+        tariff_red: newProvider.tariff_red !== '' ? parseFloat(newProvider.tariff_red) : null
       }
     };
 
@@ -415,7 +484,7 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                 <th>Fila</th>
                 <th>Especialidad / Servicio</th>
                 <th>Matrícula</th>
-                <th>Profesional y Fórmulas Excel</th>
+                <th>Profesional</th>
                 <th>% Copart.</th>
                 <th>% Dist. Grupo</th>
                 <th>Regla Especial</th>
@@ -431,52 +500,26 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                   <td>{p.mat || '-'}</td>
                   <td>
                     <div style={{ fontWeight: '600', color: 'var(--text-primary)' }}>{p.prof}</div>
-                    {p.formulas && (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: '0.35rem' }}>
-                        {p.formulas.col_f && (
-                          <div>
-                            <span style={{ color: 'var(--text-muted)' }}>Coseguro (F):</span>{' '}
-                            <span style={{ fontStyle: 'italic', color: '#a78bfa' }}>{translateExcelFormula(p.formulas.col_f, p.row)}</span>
-                          </div>
+                    {/* Render specific custom tariffs badges if they are defined */}
+                    {p.formulas && (p.formulas.tariff_apross || p.formulas.tariff_horizonte || p.formulas.tariff_red) ? (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', fontSize: '0.68rem', marginTop: '0.25rem' }}>
+                        {p.formulas.tariff_apross && (
+                          <span style={{ background: 'rgba(6,182,212,0.08)', padding: '0.05rem 0.25rem', borderRadius: '4px', color: '#22d3ee', fontWeight: '500' }}>
+                            Tarifa APROSS: ${parseNum(p.formulas.tariff_apross).toLocaleString('es-AR')}
+                          </span>
                         )}
-                        {p.formulas.col_j && (
-                          <div>
-                            <span style={{ color: 'var(--text-muted)' }}>APROSS (J):</span>{' '}
-                            <span style={{ fontStyle: 'italic', color: '#22d3ee' }}>{translateExcelFormula(p.formulas.col_j, p.row)}</span>
-                          </div>
+                        {p.formulas.tariff_horizonte && (
+                          <span style={{ background: 'rgba(16,185,129,0.08)', padding: '0.05rem 0.25rem', borderRadius: '4px', color: '#34d399', fontWeight: '500' }}>
+                            Tarifa Horiz: ${parseNum(p.formulas.tariff_horizonte).toLocaleString('es-AR')}
+                          </span>
                         )}
-                        {p.formulas.col_m && (
-                          <div>
-                            <span style={{ color: 'var(--text-muted)' }}>Horizonte (M):</span>{' '}
-                            <span style={{ fontStyle: 'italic', color: '#34d399' }}>{translateExcelFormula(p.formulas.col_m, p.row)}</span>
-                          </div>
-                        )}
-                        {p.formulas.col_p && (
-                          <div>
-                            <span style={{ color: 'var(--text-muted)' }}>Red / ART (P):</span>{' '}
-                            <span style={{ fontStyle: 'italic', color: '#f59e0b' }}>{translateExcelFormula(p.formulas.col_p, p.row)}</span>
-                          </div>
-                        )}
-                        {p.formulas.col_q && (
-                          <div>
-                            <span style={{ color: 'var(--text-muted)' }}>Subtotal (Q):</span>{' '}
-                            <span style={{ fontStyle: 'italic', color: '#a78bfa', fontWeight: '500' }}>{translateExcelFormula(p.formulas.col_q, p.row)}</span>
-                          </div>
-                        )}
-                        {p.formulas.col_s && (
-                          <div>
-                            <span style={{ color: 'var(--text-muted)' }}>Esp. Grupo (S):</span>{' '}
-                            <span style={{ fontStyle: 'italic', color: '#22d3ee', fontWeight: '500' }}>{translateExcelFormula(p.formulas.col_s, p.row)}</span>
-                          </div>
-                        )}
-                        {p.formulas.col_t && (
-                          <div>
-                            <span style={{ color: 'var(--text-muted)' }}>Pago Final (T):</span>{' '}
-                            <span style={{ fontStyle: 'italic', color: '#34d399', fontWeight: '600' }}>{translateExcelFormula(p.formulas.col_t, p.row)}</span>
-                          </div>
+                        {p.formulas.tariff_red && (
+                          <span style={{ background: 'rgba(245,158,11,0.08)', padding: '0.05rem 0.25rem', borderRadius: '4px', color: '#fbbf24', fontWeight: '500' }}>
+                            Tarifa Red: ${parseNum(p.formulas.tariff_red).toLocaleString('es-AR')}
+                          </span>
                         )}
                       </div>
-                    )}
+                    ) : null}
                   </td>
                   <td>{p.pct_copart ? `${(p.pct_copart * 100).toFixed(0)}%` : '-'}</td>
                   <td>{p.pct_dist ? `${(p.pct_dist * 100).toFixed(0)}%` : '-'}</td>
@@ -594,12 +637,50 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                 />
               </div>
 
-              {/* Fórmulas de Excel */}
+              {/* Tarifas Especiales */}
               <h4 style={{ color: 'var(--primary)', marginTop: '1.5rem', marginBottom: '0.5rem', fontSize: '0.9rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.4rem' }}>
-                Fórmulas de Liquidación (Excel)
+                Tarifas Especiales por Prestador (Opcional)
               </h4>
               <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-                Configura las fórmulas de cálculo. Utiliza el asistente interactivo para no tener que recordar las letras y números de columna de Excel.
+                Completa estos campos únicamente si este profesional tiene un valor de consulta diferente al valor general del sanatorio.
+              </p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Tarifa APROSS ($)</label>
+                  <input 
+                    type="number" 
+                    value={newProvider.tariff_apross} 
+                    onChange={(e) => setNewProvider({...newProvider, tariff_apross: e.target.value})}
+                    placeholder="General: $12.000"
+                  />
+                </div>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Tarifa Horizonte ($)</label>
+                  <input 
+                    type="number" 
+                    value={newProvider.tariff_horizonte} 
+                    onChange={(e) => setNewProvider({...newProvider, tariff_horizonte: e.target.value})}
+                    placeholder="General: $14.606"
+                  />
+                </div>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Tarifa Red ($)</label>
+                  <input 
+                    type="number" 
+                    value={newProvider.tariff_red} 
+                    onChange={(e) => setNewProvider({...newProvider, tariff_red: e.target.value})}
+                    placeholder="General: $17.300"
+                  />
+                </div>
+              </div>
+
+              {/* Fórmulas de Excel */}
+              <h4 style={{ color: 'var(--primary)', marginTop: '1.5rem', marginBottom: '0.5rem', fontSize: '0.9rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.4rem' }}>
+                Fórmulas de Liquidación
+              </h4>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+                Configura las fórmulas de cálculo utilizando variables del negocio. Haz clic en las etiquetas inferiores para autocompletar.
               </p>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -607,15 +688,13 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                   label="Fórmula Coseguro (Col F)"
                   value={newProvider.formula_f}
                   onChange={(val) => setNewProvider({...newProvider, formula_f: val})}
-                  placeholder="Ej: =E6*D6"
-                  row={newProvider.formula_f ? Math.max(...providers.map(p => p.row), 0) + 1 : 1}
+                  placeholder="Ej: [Tot. Valorizado] * [% Copart.]"
                 />
                 <FormulaInput 
                   label="Fórmula APROSS (Col J)"
                   value={newProvider.formula_j}
                   onChange={(val) => setNewProvider({...newProvider, formula_j: val})}
-                  placeholder="Ej: =I6*D6"
-                  row={newProvider.formula_j ? Math.max(...providers.map(p => p.row), 0) + 1 : 1}
+                  placeholder="Ej: [APROSS Valor] * [% Copart.]"
                 />
               </div>
 
@@ -624,15 +703,13 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                   label="Fórmula Horizonte (Col M)"
                   value={newProvider.formula_m}
                   onChange={(val) => setNewProvider({...newProvider, formula_m: val})}
-                  placeholder="Ej: =L6*D6"
-                  row={newProvider.formula_m ? Math.max(...providers.map(p => p.row), 0) + 1 : 1}
+                  placeholder="Ej: [Horizonte Valor] * [% Copart.]"
                 />
                 <FormulaInput 
                   label="Fórmula Red / ART (Col P)"
                   value={newProvider.formula_p}
                   onChange={(val) => setNewProvider({...newProvider, formula_p: val})}
-                  placeholder="Ej: =O6*D6"
-                  row={newProvider.formula_p ? Math.max(...providers.map(p => p.row), 0) + 1 : 1}
+                  placeholder="Ej: [Red Valor] * [% Copart.]"
                 />
               </div>
 
@@ -641,22 +718,19 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                   label="Fórmula Subtotal (Col Q)"
                   value={newProvider.formula_q}
                   onChange={(val) => setNewProvider({...newProvider, formula_q: val})}
-                  placeholder="Ej: =F6+J6+M6+P6"
-                  row={newProvider.formula_q ? Math.max(...providers.map(p => p.row), 0) + 1 : 1}
+                  placeholder="Ej: [Coseguros] + [APROSS Copart.] + [Horizonte Copart.] + [Red Copart.]"
                 />
                 <FormulaInput 
                   label="Fórmula Especial (Col S)"
                   value={newProvider.formula_s}
                   onChange={(val) => setNewProvider({...newProvider, formula_s: val})}
                   placeholder="Vacío si no aplica"
-                  row={newProvider.formula_s ? Math.max(...providers.map(p => p.row), 0) + 1 : 1}
                 />
                 <FormulaInput 
                   label="Fórmula Pago (Col T)"
                   value={newProvider.formula_t}
                   onChange={(val) => setNewProvider({...newProvider, formula_t: val})}
-                  placeholder="Ej: =Q6"
-                  row={newProvider.formula_t ? Math.max(...providers.map(p => p.row), 0) + 1 : 1}
+                  placeholder="Ej: [Subtotal Copart]"
                 />
               </div>
             </div>
@@ -753,12 +827,50 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                 />
               </div>
 
-              {/* Fórmulas de Excel */}
+              {/* Tarifas Especiales */}
               <h4 style={{ color: 'var(--primary)', marginTop: '1.5rem', marginBottom: '0.5rem', fontSize: '0.9rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.4rem' }}>
-                Fórmulas de Liquidación (Excel)
+                Tarifas Especiales por Prestador (Opcional)
               </h4>
               <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-                Modifica las fórmulas de Excel asignadas a este profesional. Usa la fila <strong>{editingProvider.row}</strong> para las referencias de celda.
+                Completa estos campos únicamente si este profesional tiene un valor de consulta diferente al valor general del sanatorio.
+              </p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Tarifa APROSS ($)</label>
+                  <input 
+                    type="number" 
+                    value={editingProvider.tariff_apross || ''} 
+                    onChange={(e) => setEditingProvider({...editingProvider, tariff_apross: e.target.value})}
+                    placeholder="General: $12.000"
+                  />
+                </div>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Tarifa Horizonte ($)</label>
+                  <input 
+                    type="number" 
+                    value={editingProvider.tariff_horizonte || ''} 
+                    onChange={(e) => setEditingProvider({...editingProvider, tariff_horizonte: e.target.value})}
+                    placeholder="General: $14.606"
+                  />
+                </div>
+                <div className="input-group">
+                  <label style={{ fontSize: '0.8rem' }}>Tarifa Red ($)</label>
+                  <input 
+                    type="number" 
+                    value={editingProvider.tariff_red || ''} 
+                    onChange={(e) => setEditingProvider({...editingProvider, tariff_red: e.target.value})}
+                    placeholder="General: $17.300"
+                  />
+                </div>
+              </div>
+
+              {/* Fórmulas de Excel */}
+              <h4 style={{ color: 'var(--primary)', marginTop: '1.5rem', marginBottom: '0.5rem', fontSize: '0.9rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.4rem' }}>
+                Fórmulas de Liquidación
+              </h4>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+                Modifica las fórmulas de cálculo utilizando variables del negocio. Haz clic en las etiquetas inferiores para autocompletar.
               </p>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -766,15 +878,13 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                   label="Fórmula Coseguro (Col F)"
                   value={editingProvider.formula_f}
                   onChange={(val) => setEditingProvider({...editingProvider, formula_f: val})}
-                  placeholder="Ej: =E6*D6"
-                  row={editingProvider.row}
+                  placeholder="Ej: [Tot. Valorizado] * [% Copart.]"
                 />
                 <FormulaInput 
                   label="Fórmula APROSS (Col J)"
                   value={editingProvider.formula_j}
                   onChange={(val) => setEditingProvider({...editingProvider, formula_j: val})}
-                  placeholder="Ej: =I6*D6"
-                  row={editingProvider.row}
+                  placeholder="Ej: [APROSS Valor] * [% Copart.]"
                 />
               </div>
 
@@ -783,15 +893,13 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                   label="Fórmula Horizonte (Col M)"
                   value={editingProvider.formula_m}
                   onChange={(val) => setEditingProvider({...editingProvider, formula_m: val})}
-                  placeholder="Ej: =L6*D6"
-                  row={editingProvider.row}
+                  placeholder="Ej: [Horizonte Valor] * [% Copart.]"
                 />
                 <FormulaInput 
                   label="Fórmula Red / ART (Col P)"
                   value={editingProvider.formula_p}
                   onChange={(val) => setEditingProvider({...editingProvider, formula_p: val})}
-                  placeholder="Ej: =O6*D6"
-                  row={editingProvider.row}
+                  placeholder="Ej: [Red Valor] * [% Copart.]"
                 />
               </div>
 
@@ -800,22 +908,19 @@ const ProvidersConfig = ({ providers = [], onUpdateProviders }) => {
                   label="Fórmula Subtotal (Col Q)"
                   value={editingProvider.formula_q}
                   onChange={(val) => setEditingProvider({...editingProvider, formula_q: val})}
-                  placeholder="Ej: =F6+J6+M6+P6"
-                  row={editingProvider.row}
+                  placeholder="Ej: [Coseguros] + [APROSS Copart.] + [Horizonte Copart.] + [Red Copart.]"
                 />
                 <FormulaInput 
                   label="Fórmula Especial (Col S)"
                   value={editingProvider.formula_s}
                   onChange={(val) => setEditingProvider({...editingProvider, formula_s: val})}
                   placeholder="Vacío si no aplica"
-                  row={editingProvider.row}
                 />
                 <FormulaInput 
                   label="Fórmula Pago (Col T)"
                   value={editingProvider.formula_t}
                   onChange={(val) => setEditingProvider({...editingProvider, formula_t: val})}
-                  placeholder="Ej: =Q6"
-                  row={editingProvider.row}
+                  placeholder="Ej: [Subtotal Copart]"
                 />
               </div>
             </div>
