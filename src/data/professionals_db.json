@@ -181,7 +181,7 @@
       "CIRUGIA GENERAL"
     ],
     "exclude_coseguros": false,
-    "exclude_directs": false
+    "exclude_directs": true
   },
   {
     "row": 12,
@@ -422,7 +422,7 @@
       "col_p": null,
       "col_q": "=F22+J22+M22+P22",
       "col_s": null,
-      "col_t": "=$S$23*R22"
+      "col_t": "=Q23*R22"
     },
     "raw_services": [
       "CIRUGIA CABEZA Y CUELLO"
@@ -445,7 +445,7 @@
       "col_p": "=O23*$D23",
       "col_q": "=F23+J23+M23+P23",
       "col_s": "=SUM(Q21:Q23)",
-      "col_t": "=$S$23*R23"
+      "col_t": "=Q23*R23"
     },
     "raw_services": [
       "CIRUGIA CABEZA Y CUELLO"
@@ -717,7 +717,8 @@
       "col_p": null,
       "col_q": "=F35+J35+M35+P35",
       "col_s": null,
-      "col_t": "=Q35"
+      "col_t": "=Q35",
+      "tariff_apross": 11000
     },
     "raw_services": [
       "DERMATOLOGIA"
@@ -837,7 +838,7 @@
     "raw_services": [
       "GEOM CLINICA MEDICA"
     ],
-    "exclude_coseguros": false,
+    "exclude_coseguros": true,
     "exclude_directs": false
   },
   {
@@ -862,7 +863,7 @@
       "GEOM NUTRICIÓN",
       "NUTRICION"
     ],
-    "exclude_coseguros": false,
+    "exclude_coseguros": true,
     "exclude_directs": false
   },
   {
@@ -885,7 +886,7 @@
     "raw_services": [
       "GEOM NUTRICIÓN"
     ],
-    "exclude_coseguros": false,
+    "exclude_coseguros": true,
     "exclude_directs": false
   },
   {
@@ -1025,7 +1026,7 @@
     "raw_services": [
       "GINECOLOGIA"
     ],
-    "exclude_coseguros": false,
+    "exclude_coseguros": true,
     "exclude_directs": false
   },
   {
@@ -1390,7 +1391,7 @@
       "NEUROCIRUGIA"
     ],
     "exclude_coseguros": false,
-    "exclude_directs": false
+    "exclude_directs": true
   },
   {
     "row": 65,
@@ -1436,7 +1437,7 @@
     "raw_services": [
       "NEUROLOGIA"
     ],
-    "exclude_coseguros": false,
+    "exclude_coseguros": true,
     "exclude_directs": false
   },
   {
@@ -1685,7 +1686,7 @@
     "raw_services": [
       "ONCOLOGIA"
     ],
-    "exclude_coseguros": false,
+    "exclude_coseguros": true,
     "exclude_directs": false
   },
   {
@@ -1755,7 +1756,7 @@
       "GEOM PSICOLOGIA",
       "PSICOLOGIA"
     ],
-    "exclude_coseguros": false,
+    "exclude_coseguros": true,
     "exclude_directs": false
   },
   {
@@ -1825,7 +1826,7 @@
       "TRAUMATOLOGIA"
     ],
     "exclude_coseguros": false,
-    "exclude_directs": false
+    "exclude_directs": true
   },
   {
     "row": 84,
@@ -1848,7 +1849,7 @@
       "TRAUMATOLOGIA"
     ],
     "exclude_coseguros": false,
-    "exclude_directs": false
+    "exclude_directs": true
   },
   {
     "row": 85,
@@ -1871,7 +1872,7 @@
       "TRAUMATOLOGIA"
     ],
     "exclude_coseguros": false,
-    "exclude_directs": false
+    "exclude_directs": true
   },
   {
     "row": 86,
@@ -1916,7 +1917,7 @@
     "raw_services": [
       "TRAUMATOLOGIA"
     ],
-    "exclude_coseguros": false,
+    "exclude_coseguros": true,
     "exclude_directs": false
   },
   {
@@ -2100,7 +2101,7 @@
     "raw_services": [
       "UROLOGIA"
     ],
-    "exclude_coseguros": false,
+    "exclude_coseguros": true,
     "exclude_directs": false
   },
   {

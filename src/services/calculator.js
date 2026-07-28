@@ -425,7 +425,7 @@ export const calculateCoparticipation = (rawRows, providers, settings) => {
           // Para Consultas Directas (código 420101), NO filtramos por servicio.
           // Contamos todas las del profesional independientemente de la especialidad
           const codeVal = parseInt(nomCod, 10);
-          if (codeVal >= 420101 && codeVal <= 420199) {
+          if (codeVal === 420101) {
             if (osName === 'APROSS (1)') {
               p.apross_count++;
             } else if (osName === 'COOP. HORIZONTE (21)') {
